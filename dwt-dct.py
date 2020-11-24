@@ -4,10 +4,11 @@ import math
 import pywt
 
 def convert_image(imagePath, size):
-    image = cv2.imread(imagePath, flags=cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread(imagePath)
     image = np.float32(image) / 255
     image = cv2.resize(image, (size, size))
-    return image
+    (b, g, r) = cv2.split(image)
+    return (b, g, r)
 
 
 def calculate_coefficients(image):
@@ -62,31 +63,50 @@ def recover_watermark(image):
     coeffs_watermarked = calculate_coefficients(image)
     dct_coeffs_watermarked = apply_dct(coeffs_watermarked[0])
 
-    watermark = retrieve_watermark(dct_coeffs_watermarked, 64)
+    watermark = retrieve_watermark(dct_coeffs_watermarked, 128)
     watermark = np.clip(watermark * 255, 0, 255)
     watermark = watermark.astype("uint8")
 
-    cv2.imshow("Watermark Image", watermark)
-    cv2.imwrite("watermark.jpg", watermark)
-    cv2.waitKey(0)
+    # cv2.imshow("Watermark Image", watermark)
+    # cv2.imwrite("watermark.jpg", watermark)
+    # cv2.waitKey(0)
+
+    return watermark
 
 
 baseImage = "images/lenna_256.jpg"
-watermarkImage = "images/mandrill_256.jpg"
-img = convert_image(baseImage, 1024)
-wtm = convert_image(watermarkImage, 64)
+watermarkImage = "images/mandrill.jpg"
+imgBGR = convert_image(baseImage, 2048)
+wtmBGR = convert_image(watermarkImage, 128)
 
-wtmCoeffs = calculate_coefficients(img)
-dctImage = apply_dct(wtmCoeffs[0])
-dctImage = embed_watermark(wtm, dctImage)
-wtmCoeffs[0] = inverse_dct(dctImage)
+reconstructedImage = []
+retrievedWatermark = []
+for channel in range(3):
+    wtmCoeffs = calculate_coefficients(imgBGR[channel])
+    dctImage = apply_dct(wtmCoeffs[0])
+    dctImage = embed_watermark(wtmBGR[channel], dctImage)
+    wtmCoeffs[0] = inverse_dct(dctImage)
 
-reconstructedImage = pywt.waverec2(wtmCoeffs, "haar")
-recover_watermark(reconstructedImage)
+    reconstructed = pywt.waverec2(wtmCoeffs, "haar")
+    retrievedWatermark.append(recover_watermark(reconstructed))
 
-reconstructedImage = np.clip(reconstructedImage * 255, 0, 255)
-reconstructedImage = reconstructedImage.astype("uint8")
+    reconstructed = np.clip(reconstructed * 255, 0, 255)
+    reconstructed = reconstructed.astype("uint8")
+    reconstructedImage.append(reconstructed) 
 
-cv2.imshow("Reconstructed Image", reconstructedImage)
-cv2.imwrite("watermarked_image.jpg", reconstructedImage)
+    # cv2.imshow("Reconstructed Image", reconstructed)
+    # cv2.imwrite("watermarked_image.jpg", reconstructed)
+    # cv2.waitKey(0)
+
+
+finalImage = cv2.merge((reconstructedImage[0], reconstructedImage[1], reconstructedImage[2]))
+finalWatermark = cv2.merge((retrievedWatermark[0], retrievedWatermark[1], retrievedWatermark[2]))
+# finalImage = np.clip(finalImage * 255, 0, 255)
+finalImage = finalImage.astype("uint8")
+finalWatermark = finalWatermark.astype("uint8")
+
+cv2.imshow('Color Image', finalImage)
+cv2.imwrite("watermarked_image.jpg", finalImage)
+cv2.imshow('Color Watermark', finalWatermark)
+cv2.imwrite("watermark.jpg", finalWatermark)
 cv2.waitKey(0)
