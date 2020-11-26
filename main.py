@@ -13,12 +13,12 @@ def DWT(coverImage, watermarkImage):
 
     # DWT on cover image
     coverImage = np.float32(coverImage)
-    coverImage /= 255;
+    coverImage /= 255
     coeffC = pywt.dwt2(coverImage, 'haar')
     cA, (cH, cV, cD) = coeffC
 
     watermarkImage = np.float32(watermarkImage)
-    watermarkImage /= 255;
+    watermarkImage /= 255
 
     # Embedding
     coeffW = (cA + 0.1 * watermarkImage, (cH, cV, cD)) #coeffW = (0.4 * cA + 0.1 * watermarkImage, (cH, cV, cD))
