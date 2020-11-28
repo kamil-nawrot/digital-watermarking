@@ -1,11 +1,8 @@
-import numpy as np
 import cv2
+import numpy as np
 import pywt
-import random
-import math
-import cmath
 
-import Attacks as Attacks
+from attacks import Attacks as Attacks
 
 
 def DWT(coverImage, watermarkImage):
