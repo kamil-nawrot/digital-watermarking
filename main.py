@@ -5,6 +5,9 @@ import random
 import math
 import cmath
 
+import Attacks as Attacks
+
+
 def DWT(coverImage, watermarkImage):
     coverImage = cv2.resize(coverImage, (500, 500))
     cv2.imshow('Cover Image', coverImage)
@@ -191,6 +194,9 @@ def DWT_SVD(coverImage, watermarkImage):
     #     cv2.imshow('Extracted Watermark', cAnew)
     cv2.imshow('Extracted Watermark', Wdnew)
 
+def compression(qualtiy):
+    return Attacks.compression("lenna_256.jpg", qualtiy)
+
 if __name__ == "__main__":
     coverImage = cv2.imread('mandrill.jpg', 0)
     watermarkImage = cv2.imread('lenna_256.jpg', 0)
@@ -198,9 +204,14 @@ if __name__ == "__main__":
     options = {1: DWT,
                2: SVD,
                3: DWT_SVD,
+               4: compression
                }
-    val = int(input('What type of embedding you want to perform?\n1.DWT\n2.SVD\n3.SVD-DWT'))
-    options[val](coverImage, watermarkImage)
+    val = int(input('What type of embedding you want to perform?\n1.DWT\n2.SVD\n3.SVD-DWT\n4.Compression\n'))
+    if val < 4:
+        options[val](coverImage, watermarkImage)
+    elif val == 4:
+        quality = int(input('Compression quality <0, 100>\n'))
+        options[val](quality)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
