@@ -24,6 +24,7 @@ def convert_image(image_name, size):
 
 def process_coefficients(imArray, model, level):
     coeffs=pywt.wavedec2(data = imArray, wavelet = model, level = level)
+    print(coeffs)
     # print coeffs[0].__len__()
     coeffs_H=list(coeffs) 
    

@@ -3,110 +3,157 @@ import cv2
 import math
 import pywt
 
-def convert_image(imagePath, size):
-    image = cv2.imread(imagePath)
-    image = np.float32(image) / 255
-    image = cv2.resize(image, (size, size))
-    (b, g, r) = cv2.split(image)
-    return (b, g, r)
+class Image:
+    def __init__(self, name, path, dim=None):
+        self.name = name
+        img = cv2.imread(path)
+        self.img = img
+        if (dim == None):
+            self.dim = np.shape(self.img)[:2]
+            self.dim = self.dim[::-1]
+            print(self.dim)
+        else:
+            self.dim = dim
+        if self.dim[0] % 8 != 0:
+            self.dim = (self.dim[0] + (self.dim[0] % 8), self.dim[1])
+        if self.dim[1] % 8 != 0:
+            self.dim = (self.dim[0], self.dim[1] + (self.dim[1] % 8))
+        print(self.dim)
+        self.img = cv2.resize(self.img, self.dim)
+        self.img = np.float32(self.img) / 255
+        self.channels = cv2.split(self.img)
+        self.coeffs = None
+
+    
+    def display(self):
+        cv2.imshow(self.name, self.img)
+        cv2.waitKey(0)
 
 
-def calculate_coefficients(image):
-    return list(pywt.wavedec2(image, wavelet="haar", level=1))
+    def display_difference(self, referenceImage):
+        if isinstance(referenceImage, Image):
+            cv2.imshow('Difference', self.img - referenceImage.img)
+            cv2.waitKey(0)
+            return
 
 
-def apply_dct(baseImage):
-    dctImage = np.empty((len(baseImage), len(baseImage)))
-    for r in range(0, len(baseImage), 8):
-        for p in range(0, len(baseImage), 8):
-            block = baseImage[r:r+8, p:p+8]
-            dctBlock = cv2.dct(block)
-            dctImage[r:r+8, p:p+8] = dctBlock
+    def save(self, path):
+        img = np.clip(self.img * 255, 0, 255)
+        img = np.uint8(img)
+        cv2.imwrite(path,  img)
+        return
 
-    return dctImage
-
-
-def inverse_dct(dctImage):
-    idctImage = np.empty((len(dctImage), len(dctImage)))
-    for r in range(0, len(dctImage), 8):
-        for p in range(0, len(dctImage), 8):
-            idctBlock = cv2.idct(dctImage[r:r+8, p:p+8])
-            idctImage[r:r+8, p:p+8] = idctBlock
-    return idctImage
+    def calculate_coefficients(self):
+        coeffs = []
+        for c in self.channels:
+            coeffs.append(pywt.dwtn(c, wavelet="haar"))
+        self.coeffs = coeffs
+        print(np.shape(self.coeffs[0]['aa']))
+        return coeffs
 
 
-def embed_watermark(watermarkImage, baseImage):
-    watermarkImage = np.ravel(watermarkImage)
-    i = 0
-    for r in range(0, len(baseImage), 8):
-        for p in range(0, len(baseImage), 8):
-            if i < len(watermarkImage):
-                dctBlock = baseImage[r:r+8, p:p+8]
-                dctBlock[5][5] = watermarkImage[i]
-                baseImage[r:r+8, p:p+8] = dctBlock
-                i += 1
-    return baseImage
+    def apply_dct(self, dwtSet):
+        setDict = {'LL': 'aa', 'LH': 'ad', 'HL': 'da', 'HH': 'dd'}
+        self.subset = setDict[dwtSet]
+        i = 0
+        for c in self.coeffs:
+            coeffSubset = c[self.subset]
+            dctChannel = np.empty(np.shape(coeffSubset))
+            for r in range(0, len(dctChannel), 4):
+                for p in range(0, len(dctChannel[0]), 4):
+                    block = coeffSubset[r:r+4, p:p+4]
+                    dctBlock = cv2.dct(block)
+                    dctChannel[r:r+4, p:p+4] = dctBlock
+            self.coeffs[i][self.subset] = dctChannel
+            i += 1
+        return self.coeffs
 
 
-def retrieve_watermark (dctWatermarkCoeffs, watermark_size):
-    watermark = []
-    for r in range(0, len(dctWatermarkCoeffs), 8):
-        for p in range(0, len(dctWatermarkCoeffs), 8):
-            coeffsBlock = dctWatermarkCoeffs[r:r+8, p:p+8]
-            watermark.append(coeffsBlock[5][5])
+    def invert_dct(self):
+        i = 0
+        for c in self.coeffs:
+            coeffSubset = c[self.subset]
+            idctChannel = np.empty(np.shape(coeffSubset))
+            for r in range(0, len(idctChannel), 4):
+                for p in range(0, len(idctChannel[0]), 4):
+                    block = coeffSubset[r:r+4, p:p+4]
+                    idctBlock = cv2.idct(block)
+                    idctChannel[r:r+4, p:p+4] = idctBlock
+            self.coeffs[i][self.subset] = idctChannel
+            i += 1
 
-    watermark = np.array(watermark).reshape(watermark_size, watermark_size)
-    return watermark
-
-
-def recover_watermark(image):
-    coeffs_watermarked = calculate_coefficients(image)
-    dct_coeffs_watermarked = apply_dct(coeffs_watermarked[0])
-
-    watermark = retrieve_watermark(dct_coeffs_watermarked, 128)
-    watermark = np.clip(watermark * 255, 0, 255)
-    watermark = watermark.astype("uint8")
-
-    # cv2.imshow("Watermark Image", watermark)
-    # cv2.imwrite("watermark.jpg", watermark)
-    # cv2.waitKey(0)
-
-    return watermark
+        return self.coeffs
 
 
-baseImage = "images/lenna_256.jpg"
-watermarkImage = "images/mandrill.jpg"
-imgBGR = convert_image(baseImage, 2048)
-wtmBGR = convert_image(watermarkImage, 128)
+    def embed_watermark(self, watermarkImage):
+        vectors = list(map(lambda c: np.ravel(c), watermarkImage.channels))
+        for c in range(3):
+            i = 0
+            coeffSubset = self.coeffs[c][self.subset]
+            for r in range(0, len(coeffSubset), 4):
+                for p in range(0, len(coeffSubset[0]), 4):
+                    if i < len(vectors[c]):
+                        dctBlock = coeffSubset[r:r+4, p:p+4]
+                        dctBlock[2][2] = vectors[c][i]
+                        coeffSubset[r:r+4, p:p+4] = dctBlock
+                        i += 1
+            self.coeffs[c][self.subset] = coeffSubset
+        return self.coeffs
+    
 
-reconstructedImage = []
-retrievedWatermark = []
-for channel in range(3):
-    wtmCoeffs = calculate_coefficients(imgBGR[channel])
-    dctImage = apply_dct(wtmCoeffs[0])
-    dctImage = embed_watermark(wtmBGR[channel], dctImage)
-    wtmCoeffs[0] = inverse_dct(dctImage)
+    def reconstruct(self):
+        reconstructedImage = []
+        for c in range(3):
+            reconstructedChannel = pywt.idwtn(self.coeffs[c], wavelet="haar")
+            reconstructedImage.append(reconstructedChannel)
 
-    reconstructed = pywt.waverec2(wtmCoeffs, "haar")
-    retrievedWatermark.append(recover_watermark(reconstructed))
+        reconstructed = cv2.merge((reconstructedImage[0], reconstructedImage[1], reconstructedImage[2]))
+        self.img = reconstructed
+        self.channels = cv2.split(reconstructed)
+        cv2.imshow("test", reconstructed)
+        cv2.waitKey(0)
+        return reconstructed
 
-    reconstructed = np.clip(reconstructed * 255, 0, 255)
-    reconstructed = reconstructed.astype("uint8")
-    reconstructedImage.append(reconstructed) 
+    
+    def extract_watermark(self, dwtSet, watermarkSize):
+        self.calculate_coefficients()
+        self.apply_dct(dwtSet)
 
-    # cv2.imshow("Reconstructed Image", reconstructed)
-    # cv2.imwrite("watermarked_image.jpg", reconstructed)
-    # cv2.waitKey(0)
+        watermark = []
+
+        for c in range(3):
+            coeffSubset = self.coeffs[c][self.subset]
+            watermarkChannel = []
+            i = 0
+            for r in range(0, len(coeffSubset), 4):
+                for p in range(0, len(coeffSubset[0]), 4):
+                    if (i < watermarkSize*watermarkSize):
+                        block = coeffSubset[r:r+4, p:p+4]
+                        watermarkChannel.append(block[2][2])
+                        i += 1
+            watermark.append(watermarkChannel)
+        # watermark = watermark[:watermarkSize*watermarkSize*3]
+        watermark = np.reshape(watermark, (3, watermarkSize, watermarkSize,))
+        watermark = cv2.merge(watermark)
+        cv2.imshow("test wtm", watermark)
+        cv2.waitKey(0)
+
+        return
 
 
-finalImage = cv2.merge((reconstructedImage[0], reconstructedImage[1], reconstructedImage[2]))
-finalWatermark = cv2.merge((retrievedWatermark[0], retrievedWatermark[1], retrievedWatermark[2]))
-# finalImage = np.clip(finalImage * 255, 0, 255)
-finalImage = finalImage.astype("uint8")
-finalWatermark = finalWatermark.astype("uint8")
+baseImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
+originalImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
+watermarkImage = Image("watermark", "images/mandrill.jpg", (128, 128))
 
-cv2.imshow('Color Image', finalImage)
-cv2.imwrite("watermarked_image.jpg", finalImage)
-cv2.imshow('Color Watermark', finalWatermark)
-cv2.imwrite("watermark.jpg", finalWatermark)
-cv2.waitKey(0)
+baseImage.calculate_coefficients()
+baseImage.apply_dct('LL')
+baseImage.embed_watermark(watermarkImage)
+baseImage.display()
+baseImage.invert_dct()
+baseImage.reconstruct()
+baseImage.display()
+baseImage.display_difference(originalImage)
+baseImage.save('watermarked_image.jpg')
+
+reconstructedImage = Image("watermarked", "watermarked_image.jpg")
+reconstructedImage.extract_watermark('HL', 128)
