@@ -5,6 +5,9 @@ import random
 import math
 import cmath
 
+import Attacks as Attacks
+
+
 def DWT(coverImage, watermarkImage):
     coverImage = cv2.resize(coverImage, (500, 500))
     cv2.imshow('Cover Image', coverImage)
@@ -13,12 +16,12 @@ def DWT(coverImage, watermarkImage):
 
     # DWT on cover image
     coverImage = np.float32(coverImage)
-    coverImage /= 255;
+    coverImage /= 255
     coeffC = pywt.dwt2(coverImage, 'haar')
     cA, (cH, cV, cD) = coeffC
 
     watermarkImage = np.float32(watermarkImage)
-    watermarkImage /= 255;
+    watermarkImage /= 255
 
     # Embedding
     coeffW = (cA + 0.1 * watermarkImage, (cH, cV, cD)) #coeffW = (0.4 * cA + 0.1 * watermarkImage, (cH, cV, cD))
@@ -59,7 +62,7 @@ def SVD(coverImage, watermarkImage):
     u, w, v = np.linalg.svd(Wcvr, full_matrices=1, compute_uv=1)
 
     # Watermarked Image
-    S = np.zeros((512, 512), np.uint8) #change for 512 from 225
+    S = np.zeros((m, n), np.uint8) #change for 512 from 225
     S[:m, :n] = np.diag(w)
     S = np.double(S)
     wimg = np.matmul(ucvr, np.matmul(S, vtcvr)) #  np.matmul- function returns the matrix product of two arrays
@@ -74,8 +77,6 @@ def DWT_SVD(coverImage, watermarkImage):
     cv2.imshow('Cover Image', coverImage)
     [m, n] = np.shape(coverImage)
     coverImage = np.double(coverImage)
-    cv2.imshow('Watermark Image', watermarkImage)
-    watermarkImage = np.double(watermarkImage)
 
     # Applying DWT on cover image and getting four sub-bands
     coverImage = np.float32(coverImage)
@@ -83,6 +84,8 @@ def DWT_SVD(coverImage, watermarkImage):
     coeffC = pywt.dwt2(coverImage, 'haar')
     cA, (cH, cV, cD) = coeffC
 
+    p = np.shape(cA)
+    print(p)
     # # SVD on cA
     uA, wA, vA = np.linalg.svd(cA, full_matrices=1, compute_uv=1)
     [a1, a2] = np.shape(cA)
@@ -108,10 +111,20 @@ def DWT_SVD(coverImage, watermarkImage):
     WD[:d1, :d2] = np.diag(cD)
 
     # SVD on watermark image
+
+    watermarkImage = cv2.resize(watermarkImage, p)
+    cv2.imshow('Watermark Image', watermarkImage)
+    watermarkImage = np.double(watermarkImage)
+
     uw, ww, vw = np.linalg.svd(watermarkImage, full_matrices=1, compute_uv=1)
     [x, y] = np.shape(watermarkImage) # example: 250,250
     WW = np.zeros((x, y), np.uint8)
     WW[:x, :y] = np.diag(ww)
+    print("shape ww: ", np.shape(ww))
+    print(ww)
+
+    print("diagonal WW shape: ",np.shape(WW))
+    print(WW)
 
     # Embedding Process for diagonals
     for i in range(0, x):
@@ -136,8 +149,8 @@ def DWT_SVD(coverImage, watermarkImage):
     cVnew = np.dot(uV, (np.dot(WV, vA)))
     cDnew = np.dot(uD, (np.dot(WD, vD)))
 
-    #coeff = cAnew, (cHnew, cVnew, cDnew)
-    coeff = cv2.resize(cAnew, (256,256)), (cH, cV, cD )
+    coeff = cAnew, (cHnew, cVnew, cDnew)
+    #coeff = cv2.resize(cAnew, (256,256)), (cH, cV, cD )
     #coeff = cA, (cv2.resize(cHnew, (256,256)), cV, cD )
     #coeff = cA, (cH, cv2.resize(cVnew, (256,256)), cD )
     #coeff = cA, (cH, cV, cv2.resize(cDnew, (256,256)))
@@ -148,45 +161,56 @@ def DWT_SVD(coverImage, watermarkImage):
 
 
 #EXTRACTION watermarked img -> 1dwt -> svd (on LL but here is probably on all sub-bands) & original img -> 1dwt -svd (on LL ...) )
-# on both Watermarking extracting procedure -> extracted watermark
-    watermarkedImage = np.float32(coverImage)
-    watermarkedImage /= 255;
-
-    #[LL1_watermarked,(_,_,_)] = pywt.dwt2(watermarkedImage, 'haar')
-    #_, ww_watermarked, _ = np.linalg.svd(LL1_watermarked, full_matrices=1, compute_uv=1)
-    # Swrec = (ww_watermarked - wA) / 0.01
-    # WMy = uA * Swrec * vA
-    # extractedImg = np.uint8(WMy)
-    # cv2.imshow('extracteed watermark', extractedImg)
-
-    ## Extract method
-    coeffWM = pywt.dwt2(watermarkedImage, 'haar')
-    hA, (hH, hV, hD) = coeffWM
-    _, ww_watermarked, _ = np.linalg.svd(hA, full_matrices=1, compute_uv=1)
-
-    extracted = (hA - cA) / 0.01  # extracted = (hA - 0.4 * cA) / 0.1
 
 
-    extracted *= 255
-    extracted = np.uint8(extracted)
+    C = pywt.dwt2(coverImage, 'haar')
+    shape_LL = C[0].shape # is LL
 
+    Cw = pywt.dwt2(watermarkedImage, 'haar')
 
-    cv2.imshow('Extracted', extracted)
+    Ucw, Scw, Vcw = np.linalg.svd(Cw[0])
+    Uc, Sc, Vc = np.linalg.svd(C[0])
+    shape_LL = np.shape(cA)
+    Snew = np.zeros((min(shape_LL), min(shape_LL)))
 
+    Uw, Sw, Vw = np.linalg.svd(WA)
+    LLnew1 = Uw.dot(np.diag(Scw)).dot(Vw)
 
+    Wdnew = np.zeros((min(shape_LL), min(shape_LL)))
 
+    Scdiag = np.zeros(shape_LL)
+    row = min(shape_LL)
+    Scdiag[:row, :row] = np.diag(Sc)
+    Sc = Scdiag
 
+    alpha = 0.01
+    for py in range(0, min(shape_LL)):
+        for px in range(0, min(shape_LL)):
+            Wdnew[py][px] = (LLnew1[py][px] - Sc[py][px]) / alpha
+
+    # watermark left after svd * Wdnew * right after svd uw * x * yv
+    # cAnew = np.dot(uw, (np.dot(Wdnew, vw)))
+    #     cv2.imshow('Extracted Watermark', cAnew)
+    cv2.imshow('Extracted Watermark', Wdnew)
+
+def compression(qualtiy):
+    return Attacks.compression("lenna_256.jpg", qualtiy)
 
 if __name__ == "__main__":
-    coverImage = cv2.imread('mandrill.jpeg', 0)
+    coverImage = cv2.imread('mandrill.jpg', 0)
     watermarkImage = cv2.imread('lenna_256.jpg', 0)
 
     options = {1: DWT,
                2: SVD,
                3: DWT_SVD,
+               4: compression
                }
-    val = int(input('What type of embedding you want to perform?\n1.DWT\n2.SVD\n3.SVD-DWT'))
-    options[val](coverImage, watermarkImage)
+    val = int(input('What type of embedding you want to perform?\n1.DWT\n2.SVD\n3.SVD-DWT\n4.Compression\n'))
+    if val < 4:
+        options[val](coverImage, watermarkImage)
+    elif val == 4:
+        quality = int(input('Compression quality <0, 100>\n'))
+        options[val](quality)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
