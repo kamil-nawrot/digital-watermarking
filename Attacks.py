@@ -8,7 +8,7 @@ def compression(filename, quality):
     # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
     im = Image.open(filename)
     ts = calendar.timegm(time.gmtime())
-    im.save("compressed/Compressed_" + quality + "_" + str(ts) + "_" + filename, optimize=True, quality=quality)
+    im.save("compressed/Compressed_" + str(quality) + "_" + str(ts) + "_" + filename, optimize=True, quality=quality)
     return ''
 
 
