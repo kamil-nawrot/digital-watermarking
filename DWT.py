@@ -1,11 +1,12 @@
-import numpy as np
 import cv2
+import numpy as np
 import pywt
 
-def DWT_RGB_LL():
-    coverImage = cv2.imread('mandrill.jpg', 8)
+
+def DWT_RGB_LL(coverImageName, watermarkImageName):
+    coverImage = cv2.imread("images/" + coverImageName, 8)  # mandrill.jpg
     cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('lenna.jpg', 8)
+    watermarkImage = cv2.imread("images/" + watermarkImageName, 8)  # lenna.jpg
     cv2.imshow('watermark', watermarkImage)
 
     # get color cover chanels BGR
@@ -67,10 +68,11 @@ def DWT_RGB_LL():
     cv2.imshow('Extracted', extracted_watermark.astype(np.uint8))
     cv2.imwrite('extracted_watermark_DWT_RBG_LL.jpg', extracted_watermark)
 
-def DWT_GRAY_LL():
-    coverImage = cv2.imread('mandrill.jpg', 0)
+
+def DWT_GRAY_LL(coverImageName, watermarkImageName):
+    coverImage = cv2.imread("images/" + coverImageName, 0)
     cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('lenna.jpg', 0)
+    watermarkImage = cv2.imread("images/" + watermarkImageName, 0)
     cv2.imshow('watermark', watermarkImage)
 
     # DWT on cover image
