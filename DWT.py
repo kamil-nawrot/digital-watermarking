@@ -3,11 +3,11 @@ import numpy as np
 import pywt
 
 
-def DWT_RGB_LL(coverImageName, watermarkImageName):
-    coverImage = cv2.imread("images/" + coverImageName, 8)  # mandrill.jpg
+def DWT_RGB_LL(coverImagePath, watermarkImagePath):
+    coverImage = readFile(coverImagePath, "RGB")
+    watermarkImage = readFile(watermarkImagePath, "RGB")
     cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread("images/" + watermarkImageName, 8)  # lenna.jpg
-    cv2.imshow('watermark', watermarkImage)
+    cv2.imshow('watermark image', watermarkImage)
 
     # get color cover chanels BGR
     cover_red1 = coverImage[:, :, 2]
@@ -69,11 +69,11 @@ def DWT_RGB_LL(coverImageName, watermarkImageName):
     cv2.imwrite('extracted_watermark_DWT_RBG_LL.jpg', extracted_watermark)
 
 
-def DWT_GRAY_LL(coverImageName, watermarkImageName):
-    coverImage = cv2.imread("images/" + coverImageName, 0)
+def DWT_GRAY_LL(coverImagePath, watermarkImagePath):
+    coverImage = readFile(coverImagePath, "GRAY")
+    watermarkImage = readFile(watermarkImagePath, "GRAY")
     cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread("images/" + watermarkImageName, 0)
-    cv2.imshow('watermark', watermarkImage)
+    cv2.imshow('watermark image', watermarkImage)
 
     # DWT on cover image
 
@@ -124,6 +124,16 @@ def DWT_GRAY_EXTRACT():
     #
     # cv2.imshow('Extracted', extracted_watermark)
     # cv2.imwrite('extracted_watermark_DWT_GRAY_LL.jpg', extracted_watermark)
+
+def readFile(path, colourType): # colour type == GRAY or RGB
+    if colourType == "GRAY":
+        img = cv2.imread(path, 0)
+        return img
+    elif colourType == "RGB":
+        img = cv2.imread(path, 8)
+        return img
+    else:
+        print("failed to read image")
 
 if __name__ == "__main__":
 

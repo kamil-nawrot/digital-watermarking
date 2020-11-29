@@ -4,7 +4,7 @@ import numpy as np
 import SVD as SVD
 import DWT_SVD as DWT_SVD
 import DWT as DWT
-# import DWT_DCT as DWT_DCT
+import DWT_DCT as DWT_DCT
 
 from attacks import Attacks as Attacks
 
@@ -13,76 +13,75 @@ def compression(quality):
     return Attacks.compression("lenna_256.jpg", quality)
 
 def grayMenu():
-    coverImage = cv2.imread('images\\mandrill_512.jpg', 0)
-    cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('images\\lenna_512.jpg', 0)
-    cv2.imshow('watermark', watermarkImage)
+    coverImagePath='images\\mandrill_512.jpg'
+    watermarkImagePath= 'images\\lenna_512.jpg'
 
-    transformationOptions = {1: DWT_SVD.DWT_SVD_GRAY_LL, 2: DWT_SVD.DWT_SVD_GRAY_HL}
+    transformationOptions = {1: DWT_SVD.DWT_SVD_GRAY_LL, 2: DWT_SVD.DWT_SVD_GRAY_HL, 4: DWT.DWT_GRAY_LL}
     transformationVal = int(input(
-        '\n\033[92mWhat type of embedding you want to perform?\033[0m \n1.SVD-DWT_GRAY_LL \n2.SVD-DWT_GRAY_HL'))
-    transformationOptions[transformationVal](coverImage,watermarkImage)
+        '\n\033[92mWhat type of embedding you want to perform?\033[0m \n1.SVD-DWT_LL \n2.SVD-DWT_HL \n4.DWT_LL'))
+    # transformationOptions[transformationVal](coverImagePath,watermarkImagePath)
 
     processOptions = {1: "watermark", 2: "attack"}
     processOrAttack = int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks'))
 
     if processOptions[processOrAttack] == "watermark":
-        transformationOptions[transformationVal](coverImage,watermarkImage)
+        transformationOptions[transformationVal](coverImagePath,watermarkImagePath)
     elif processOptions[processOrAttack] == "attack":
-        transformationName = ""
-        if (transformationVal == 1):
-            transformationName = "DWT_SVD_GRAY_LL.jpg"
-        elif(transformationVal == 2):
-            transformationName = "DWT_SVD_GRAY_HL.jpg"
-        elif (transformationVal == 3):
-            transformationName = "DCT-DWT_GRAY_LL.jpg"
-        elif (transformationVal == 4):
-            transformationName = "DWT_GRAY_LL.jpg"
-        elif (transformationVal == 5):
-            transformationName = "DCT_GRAY_LL.jpg"
+        transformationName = getTransformName(transformationVal, "GRAY")
         attacksMenu(transformationName)
 
 
 
 
 def rgbMenu():
-    coverImage = cv2.imread('images\\mandrill_512.jpg', 8)
-    cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('images\\lenna_512.jpg', 8)
-    cv2.imshow('watermark image', watermarkImage)
+    coverImagePath = 'images\\mandrill_512.jpg'
+    watermarkImagePath = 'images\\lenna_512.jpg'
 
-    transformationOptions = {1: DWT_SVD.DWT_SVD_RGB_LL, 2: DWT_SVD.DWT_SVD_RGB_HL}
+    transformationOptions = {1: DWT_SVD.DWT_SVD_RGB_LL, 2: DWT_SVD.DWT_SVD_RGB_HL, 4: DWT.DWT_RGB_LL}
     transformationVal = int(input(
-        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.SVD-DWT_RGB_LL \n2.SVD-DWT_RGB_HL \n3.DCT-DWT_RGB_LL \n4.DWT_RGB_LL \n5.DCT_RGB_LL '))
+        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.SVD-DWT_LL \n2.SVD-DWT_HL \n3.DCT-DWT_LL \n4.DWT_LL'))
 
     processOptions = {1: "watermark", 2: "attack"}
     processOrAttack= int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks'))
 
     if processOptions[processOrAttack] == "watermark":
-        transformationOptions[transformationVal](coverImage,watermarkImage)
+        if transformationVal != 3:
+            transformationOptions[transformationVal](coverImagePath,watermarkImagePath)
+        else:
+            baseImage = DWT_DCT.Image("base", "images/lenna_256.jpg", (1024, 1024))
+            watermarkImage = DWT_DCT.Image("watermark", "images/mandrill_256.jpg", (128, 128))
+            baseImage.embed_watermark('LL', watermarkImage)
+            baseImage.display()
+            baseImage.save('watermarked_image.jpg')
+            reconstructedImage = DWT_DCT.Image("watermarked", "watermarked_image.jpg")
+            reconstructedImage.extract_watermark('LL', 128)
     elif processOptions[processOrAttack] == "attack":
-        transformationName = ""
-        if (transformationVal == 1):
-            transformationName = "DWT_SVD_RGB_LL.jpg"
-        elif(transformationVal == 2):
-            transformationName = "DWT_SVD_RGB_HL.jpg"
-        elif (transformationVal == 3):
-            transformationName = "DCT-DWT_RGB_LL.jpg"
-        elif (transformationVal == 4):
-            transformationName = "DWT_RGB_LL.jpg"
-        elif (transformationVal == 5):
-            transformationName = "DCT_RGB_LL.jpg"
+        transformationName = getTransformName(transformationVal, "RGB")
         attacksMenu(transformationName)
+
+def getTransformName(transformationVal, colourOption):
+    transformationName = ""
+    if (transformationVal == 1):
+        transformationName = "DWT_SVD_" + colourOption + "_LL.jpg"
+    elif (transformationVal == 2):
+        transformationName = "DWT_SVD_" + colourOption + "_HL.jpg"
+    elif (transformationVal == 3):
+        transformationName = "DCT-DWT_" + colourOption + "_LL.jpg"
+    elif (transformationVal == 4):
+        transformationName = "DWT_" + colourOption + "_LL.jpg"
+    elif (transformationVal == 5):
+        transformationName = "DCT_" + colourOption + "_LL.jpg"
+    return transformationName
 
 def attacksMenu(transformationName):
     extractedWatermarkPath = "extracted_watermark_" + transformationName
     watermarkPath = "watermarked_image_" + transformationName
 
     extractedWatermark = cv2.imread(extractedWatermarkPath, 8)
-    cv2.imshow('extracted watermark image test from attacks', extractedWatermark)
+    # cv2.imshow('extracted watermark image test from attacks', extractedWatermark)
 
     watermark = cv2.imread(watermarkPath, 8)
-    cv2.imshow('watermark image test from attacks', watermark)
+    # cv2.imshow('watermark image test from attacks', watermark)
 
     options = {1: Attacks.compression, 2: Attacks.distorition, 3: Attacks.transformation}
     val = int(input(

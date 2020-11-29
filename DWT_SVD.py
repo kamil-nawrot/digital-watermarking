@@ -8,10 +8,14 @@ from skimage import data
 from skimage.color import rgb2gray
 
 
-def DWT_SVD_RGB_LL(coverImage,watermarkImage):
+def DWT_SVD_RGB_LL(coverImagePath,watermarkImagePath):
     # Cover Image
     # coverImage = cv2.imread('mandrill.jpg', 8)
-    # cv2.imshow('orginal image', coverImage)
+    coverImage = readFile(coverImagePath,"RGB")
+    watermarkImage = readFile(watermarkImagePath,"RGB")
+
+    cv2.imshow('orginal image', coverImage)
+    cv2.imshow('watermark image', watermarkImage)
 
     # get cover image color chanels BGR
     cover_red1 = coverImage[:, :, 2]
@@ -160,10 +164,14 @@ def DWT_SVD_RGB_LL(coverImage,watermarkImage):
     cv2.imwrite('extracted_watermark_DWT_SVD_RGB_LL.jpg', extracted_watermark )
     return extracted_watermark
 
-def DWT_SVD_RGB_HL(coverImage, watermarkImage):
+def DWT_SVD_RGB_HL(coverImagePath,watermarkImagePath):
     # Cover Image
     # coverImage = cv2.imread('mandrill.jpg', 8)
     # cv2.imshow('orginal image', coverImage)
+    coverImage = readFile(coverImagePath, "RGB")
+    watermarkImage = readFile(watermarkImagePath, "RGB")
+    cv2.imshow('orginal image', coverImage)
+    cv2.imshow('watermark image', watermarkImage)
 
     # get cover image color chanels BGR
     cover_red1 = coverImage[:, :, 2]
@@ -311,11 +319,15 @@ def DWT_SVD_RGB_HL(coverImage, watermarkImage):
     cv2.imwrite('extracted_watermark_DWT_SVD_RGB_HL.jpg',extracted_watermark);
 
     return extracted_watermark
-def DWT_SVD_GRAY_LL(coverImage, watermarkImage):
+def DWT_SVD_GRAY_LL(coverImagePath,watermarkImagePath):
     # coverImage = cv2.imread('mandrill.jpg', 0)
     # cv2.imshow('orginal image', coverImage)
     # watermarkImage = cv2.imread('lenna.jpg', 0)
     # cv2.imshow('watermark', watermarkImage)
+    coverImage = readFile(coverImagePath, "RGB")
+    watermarkImage = readFile(watermarkImagePath, "RGB")
+    cv2.imshow('orginal image', coverImage)
+    cv2.imshow('watermark image', watermarkImage)
 
 
     #dwt on cover image
@@ -362,11 +374,15 @@ def DWT_SVD_GRAY_LL(coverImage, watermarkImage):
     cv2.imwrite('extracted_watermark_DWT_SVD_GRAY_LL.jpg',extracted_watermark);
     return extracted_watermark
 
-def DWT_SVD_GRAY_HL(coverImage, watermarkImage ):
+def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
     # coverImage = cv2.imread('mandrill.jpg', 0)
     # cv2.imshow('orginal image', coverImage)
     # watermarkImage = cv2.imread('lenna.jpg', 0)
     # cv2.imshow('watermark', watermarkImage)
+    coverImage = readFile(coverImagePath, "RGB")
+    watermarkImage = readFile(watermarkImagePath, "RGB")
+    cv2.imshow('orginal image', coverImage)
+    cv2.imshow('watermark image', watermarkImage)
 
     # dwt on cover image
     c_LL, (c_LH, c_HL, c_HH) = pywt.dwt2(coverImage, 'haar')
@@ -432,6 +448,17 @@ def rgbMenu():
     val = int(input(
         'What type of embedding you want to perform?\n1.SVD-DWT_RGB_LL \n2.SVD-DWT_RGB_HL'))
     options[val](coverImage,watermarkImage)
+
+def readFile(path, colourType): # colour type == GRAY or RGB
+    if colourType == "GRAY":
+        img = cv2.imread(path, 0)
+        return img
+    elif colourType == "RGB":
+        img = cv2.imread(path, 8)
+        return img
+    else:
+        print("failed to read image")
+
 
 if __name__ == "__main__":
 

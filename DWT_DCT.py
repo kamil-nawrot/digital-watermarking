@@ -141,14 +141,14 @@ class Image:
         return
 
 
-baseImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
-originalImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
-watermarkImage = Image("watermark", "images/mandrill_256.jpg", (128, 128))
-
-baseImage.embed_watermark('HL', watermarkImage)
-baseImage.display()
-baseImage.display_difference(originalImage)
-baseImage.save('watermarked_image.jpg')
-
-reconstructedImage = Image("watermarked", "watermarked_image.jpg")
-reconstructedImage.extract_watermark('HL', 128)
+# baseImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
+# originalImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
+# watermarkImage = Image("watermark", "images/mandrill_256.jpg", (128, 128))
+#
+# baseImage.embed_watermark('HL', watermarkImage)
+# baseImage.display()
+# baseImage.display_difference(originalImage)
+# baseImage.save('watermarked_image.jpg')
+#
+# reconstructedImage = Image("watermarked", "watermarked_image.jpg")
+# reconstructedImage.extract_watermark('HL', 128)
