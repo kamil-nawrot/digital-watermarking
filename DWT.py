@@ -134,13 +134,3 @@ def readFile(path, colourType): # colour type == GRAY or RGB
         return img
     else:
         print("failed to read image")
-
-if __name__ == "__main__":
-
-    options = {1: DWT_GRAY_LL, 2: DWT_RGB_LL
-               }
-    val = int(input('What type of embedding you want to perform?\n1.DWT_GRAY_EMBED\n2.DWT_RGB_LL '))
-    options[val]()
-
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()

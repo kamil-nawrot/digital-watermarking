@@ -324,8 +324,8 @@ def DWT_SVD_GRAY_LL(coverImagePath,watermarkImagePath):
     # cv2.imshow('orginal image', coverImage)
     # watermarkImage = cv2.imread('lenna.jpg', 0)
     # cv2.imshow('watermark', watermarkImage)
-    coverImage = readFile(coverImagePath, "RGB")
-    watermarkImage = readFile(watermarkImagePath, "RGB")
+    coverImage = readFile(coverImagePath, "GRAY")
+    watermarkImage = readFile(watermarkImagePath, "GRAY")
     cv2.imshow('orginal image', coverImage)
     cv2.imshow('watermark image', watermarkImage)
 
@@ -379,8 +379,8 @@ def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
     # cv2.imshow('orginal image', coverImage)
     # watermarkImage = cv2.imread('lenna.jpg', 0)
     # cv2.imshow('watermark', watermarkImage)
-    coverImage = readFile(coverImagePath, "RGB")
-    watermarkImage = readFile(watermarkImagePath, "RGB")
+    coverImage = readFile(coverImagePath, "GRAY")
+    watermarkImage = readFile(watermarkImagePath, "GRAY")
     cv2.imshow('orginal image', coverImage)
     cv2.imshow('watermark image', watermarkImage)
 
@@ -427,28 +427,6 @@ def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
     cv2.imwrite('extracted_watermark_DWT_SVD_GRAY_HL.jpg',extracted_watermark);
     return extracted_watermark
 
-def grayMenu():
-    coverImage = cv2.imread('images\\mandrill_512.jpg', 0)
-    cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('images\\lenna_512.jpg', 0)
-    cv2.imshow('watermark', watermarkImage)
-
-    options = {1:DWT_SVD_GRAY_LL, 2: DWT_SVD_GRAY_HL}
-    val = int(input(
-        'What type of embedding you want to perform?\n1.SVD-DWT_GRAY_LL \n2.SVD-DWT_GRAY_HL'))
-    options[val](coverImage,watermarkImage)
-
-def rgbMenu():
-    coverImage = cv2.imread('images\\mandrill_512.jpg', 8)
-    cv2.imshow('orginal image', coverImage)
-    watermarkImage = cv2.imread('images\\lenna_512.jpg', 8)
-    cv2.imshow('watermark image', watermarkImage)
-
-    options = {1: DWT_SVD_RGB_LL, 2: DWT_SVD_RGB_HL}
-    val = int(input(
-        'What type of embedding you want to perform?\n1.SVD-DWT_RGB_LL \n2.SVD-DWT_RGB_HL'))
-    options[val](coverImage,watermarkImage)
-
 def readFile(path, colourType): # colour type == GRAY or RGB
     if colourType == "GRAY":
         img = cv2.imread(path, 0)
@@ -458,13 +436,3 @@ def readFile(path, colourType): # colour type == GRAY or RGB
         return img
     else:
         print("failed to read image")
-
-
-if __name__ == "__main__":
-
-    options = {1: rgbMenu, 2: grayMenu }
-    val = int(input('Do you want to perform operation on Gray or RGB images?\n1.RGB \n2.GRAY'))
-    options[val]()
-
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
