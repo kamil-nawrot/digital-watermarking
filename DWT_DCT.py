@@ -11,14 +11,12 @@ class Image:
         if (dim == None):
             self.dim = np.shape(self.img)[:2]
             self.dim = self.dim[::-1]
-            print(self.dim)
         else:
             self.dim = dim
         if self.dim[0] % 8 != 0:
             self.dim = (self.dim[0] + (self.dim[0] % 8), self.dim[1])
         if self.dim[1] % 8 != 0:
             self.dim = (self.dim[0], self.dim[1] + (self.dim[1] % 8))
-        print(self.dim)
         self.img = cv2.resize(self.img, self.dim)
         self.img = np.float32(self.img) / 255
         self.channels = cv2.split(self.img)
@@ -48,7 +46,6 @@ class Image:
         for c in self.channels:
             coeffs.append(pywt.dwtn(c, wavelet="haar"))
         self.coeffs = coeffs
-        print(np.shape(self.coeffs[0]['aa']))
         return coeffs
 
 
@@ -85,7 +82,9 @@ class Image:
         return self.coeffs
 
 
-    def embed_watermark(self, watermarkImage):
+    def embed_watermark(self, dwtSet, watermarkImage):
+        self.calculate_coefficients()
+        self.apply_dct(dwtSet)
         vectors = list(map(lambda c: np.ravel(c), watermarkImage.channels))
         for c in range(3):
             i = 0
@@ -98,7 +97,9 @@ class Image:
                         coeffSubset[r:r+4, p:p+4] = dctBlock
                         i += 1
             self.coeffs[c][self.subset] = coeffSubset
-        return self.coeffs
+        self.invert_dct()
+        reconstructed = self.reconstruct()
+        return reconstructed
     
 
     def reconstruct(self):
@@ -132,7 +133,6 @@ class Image:
                         watermarkChannel.append(block[2][2])
                         i += 1
             watermark.append(watermarkChannel)
-        # watermark = watermark[:watermarkSize*watermarkSize*3]
         watermark = np.reshape(watermark, (3, watermarkSize, watermarkSize,))
         watermark = cv2.merge(watermark)
         cv2.imshow("test wtm", watermark)
@@ -143,14 +143,9 @@ class Image:
 
 baseImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
 originalImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
-watermarkImage = Image("watermark", "images/mandrill.jpg", (128, 128))
+watermarkImage = Image("watermark", "images/mandrill_256.jpg", (128, 128))
 
-baseImage.calculate_coefficients()
-baseImage.apply_dct('LL')
-baseImage.embed_watermark(watermarkImage)
-baseImage.display()
-baseImage.invert_dct()
-baseImage.reconstruct()
+baseImage.embed_watermark('HL', watermarkImage)
 baseImage.display()
 baseImage.display_difference(originalImage)
 baseImage.save('watermarked_image.jpg')
