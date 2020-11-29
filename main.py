@@ -5,6 +5,7 @@ import SVD as SVD
 import DWT_SVD as DWT_SVD
 import DWT as DWT
 import DWT_DCT as DWT_DCT
+import sys
 
 from attacks import Attacks as Attacks
 
@@ -20,10 +21,10 @@ def grayMenu():
 
     transformationOptions = {1: DWT_SVD.DWT_SVD_GRAY_LL, 2: DWT_SVD.DWT_SVD_GRAY_HL, 5: DWT.DWT_GRAY_LL}
     transformationVal = int(input(
-        '\n\033[92mWhat type of embedding you want to perform?\033[0m \n1.DWT-SVD_LL \n2.DWT-SVD_HL \n3.DCT-DWT_LL \n4.DCT-DWT_HL \n5.DWT_LL'))
+        '\n\033[92mWhat type of embedding you want to perform?\033[0m \n1.DWT-SVD_LL \n2.DWT-SVD_HL \n3.DCT-DWT_LL \n4.DCT-DWT_HL \n5.DWT_LL\n'))
 
     processOptions = {1: "watermark", 2: "attack"}
-    processOrAttack = int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks'))
+    processOrAttack = int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks\n'))
 
     if processOptions[processOrAttack] == "watermark":
         if transformationVal != 3 and transformationVal != 4:
@@ -62,10 +63,10 @@ def rgbMenu():
 
     transformationOptions = {1: DWT_SVD.DWT_SVD_RGB_LL, 2: DWT_SVD.DWT_SVD_RGB_HL, 5: DWT.DWT_RGB_LL}
     transformationVal = int(input(
-        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.SVD-DWT_LL \n2.SVD-DWT_HL \n3.DCT-DWT_LL\n4.DCT_DWT_HL \n5.DWT_LL'))
+        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.SVD-DWT_LL \n2.SVD-DWT_HL \n3.DCT-DWT_LL\n4.DCT_DWT_HL \n5.DWT_LL\n'))
 
     processOptions = {1: "watermark", 2: "attack"}
-    processOrAttack= int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks'))
+    processOrAttack= int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks\n '))
 
     if processOptions[processOrAttack] == "watermark":
         if transformationVal != 3 and transformationVal !=4:
@@ -116,14 +117,20 @@ def attacksMenu(transformationName):
 
     options = {1: Attacks.compression, 2: Attacks.distorition, 3: Attacks.transformation}
     val = int(input(
-        '\n\033[92mWhat kind of attack to perform?\033[0m \n1.Compression \n2.Distortion \n3.Transformation'))
+        '\n\033[92mWhat kind of attack to perform?\033[0m \n1.Compression \n2.Distortion \n3.Transformation\n'))
     # options[val]()
     print("" + str(options[val]))
 
+def exit():
+    sys.exit()
+
+
+
 if __name__ == "__main__":
 
-    options = {1: rgbMenu, 2: grayMenu}
-    val = int(input('\033[92mDo you want to process RGB or GRAY images? \033[0m \n1.RGB \n2.GRAY'))
+
+    options = {1: rgbMenu, 2: grayMenu, 0: exit}
+    val = int(input('\033[92mDo you want to process RGB or GRAY images? \033[0m \n1.RGB \n2.GRAY \n0.EXIT\n'))
     options[val]()
 
     cv2.waitKey(0)
@@ -131,29 +138,3 @@ if __name__ == "__main__":
 
 
 
-# if __name__ == "__main__":
-#     coverImage = cv2.imread('mandrill.jpg', 0)
-#     watermarkImage = cv2.imread('lenna_256.jpg', 0)
-#
-#     options = {1: DWT,
-#                2: SVD,
-#                3: DWT_SVD,
-#                4: DWT_DCT,
-#                5: compression
-#                }
-#
-#     choice = int(input('What type of embedding you want to perform?\n1.DWT\n2.SVD\n3.SVD-DWT\n4.Compression\n'))
-#     if choice == 1:
-#         opt = int(input('What type of embedding you want to perform?\n1.DWT_GRAY_EMBED\n2.DWT_RGB_LL\n'))
-#         if opt == 1:
-#             DWT.DWT_RGB_LL("mandrill.jpg", "lenna.jpg")
-#         elif opt == 2:
-#             DWT.DWT_GRAY_LL("mandrill.jpg", "lenna.jpg")
-#     elif choice > 1 and choice < 4:
-#         options[choice](coverImage, watermarkImage)
-#     elif choice == 5:
-#         quality = int(input('Compression quality <0, 100>\n'))
-#         options[choice](quality)
-#
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()

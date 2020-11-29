@@ -340,7 +340,7 @@ def DWT_SVD_GRAY_LL(coverImagePath,watermarkImagePath):
     V_c_img = V_c_img.T.conj()
 
     #dwt on watermark image
-    w_LL, (w_LH, w_HL, w_HH) = pywt.dwt2(coverImage, 'haar')
+    w_LL, (w_LH, w_HL, w_HH) = pywt.dwt2(watermarkImage, 'haar')
     #svd on watermark image LL
     U_w_img, S_w_img, V_w_img = np.linalg.svd(w_LL, full_matrices=1, compute_uv=1)
     S = np.zeros((np.shape(w_LL)))
@@ -394,7 +394,7 @@ def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
     V_c_img = V_c_img.T.conj()
 
     # dwt on watermark image
-    w_LL, (w_LH, w_HL, w_HH) = pywt.dwt2(coverImage, 'haar')
+    w_LL, (w_LH, w_HL, w_HH) = pywt.dwt2(watermarkImage, 'haar')
     # svd on watermark image LL
     U_w_img, S_w_img, V_w_img = np.linalg.svd(w_HL, full_matrices=1, compute_uv=1)
     S = np.zeros((np.shape(w_HL)))
