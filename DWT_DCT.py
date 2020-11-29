@@ -4,9 +4,9 @@ import math
 import pywt
 
 class Image:
-    def __init__(self, name, path, dim=None):
+    def __init__(self, name, path, dim=None, mode=8):
         self.name = name
-        img = cv2.imread(path)
+        img = cv2.imread(path, mode)
         self.img = img
         if (dim == None):
             self.dim = np.shape(self.img)[:2]
@@ -86,7 +86,7 @@ class Image:
         self.calculate_coefficients()
         self.apply_dct(dwtSet)
         vectors = list(map(lambda c: np.ravel(c), watermarkImage.channels))
-        for c in range(3):
+        for c in range(len(self.channels)):
             i = 0
             coeffSubset = self.coeffs[c][self.subset]
             for r in range(0, len(coeffSubset), 4):
@@ -104,14 +104,14 @@ class Image:
 
     def reconstruct(self):
         reconstructedImage = []
-        for c in range(3):
+        for c in range(len(self.channels)):
             reconstructedChannel = pywt.idwtn(self.coeffs[c], wavelet="haar")
             reconstructedImage.append(reconstructedChannel)
 
-        reconstructed = cv2.merge((reconstructedImage[0], reconstructedImage[1], reconstructedImage[2]))
+        reconstructed = cv2.merge(reconstructedImage)
         self.img = reconstructed
         self.channels = cv2.split(reconstructed)
-        cv2.imshow("test", reconstructed)
+        cv2.imshow("Watermarked Image", reconstructed)
         cv2.waitKey(0)
         return reconstructed
 
@@ -122,7 +122,7 @@ class Image:
 
         watermark = []
 
-        for c in range(3):
+        for c in range(len(self.channels)):
             coeffSubset = self.coeffs[c][self.subset]
             watermarkChannel = []
             i = 0
@@ -133,9 +133,9 @@ class Image:
                         watermarkChannel.append(block[2][2])
                         i += 1
             watermark.append(watermarkChannel)
-        watermark = np.reshape(watermark, (3, watermarkSize, watermarkSize,))
+        watermark = np.reshape(watermark, (len(self.channels), watermarkSize, watermarkSize,))
         watermark = cv2.merge(watermark)
-        cv2.imshow("test wtm", watermark)
+        cv2.imshow("Extracted Watermark", watermark)
         cv2.waitKey(0)
 
         return
