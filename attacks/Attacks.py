@@ -1,7 +1,18 @@
 import calendar
 import time
 
+import cv2
 from PIL import Image
+
+
+def checkPSNR(original, attacked):
+    # img1 = cv2.imread("images/" + original)
+    img1 = cv2.imread("../images/lenna_256.jpg")
+    # img2 = cv2.imread("images/" + attacked)
+    img2 = cv2.imread("compressed/Compressed_1606579782_lenna_256.jpg")
+    psrn = cv2.PSNR(img1, img2)
+    print(psrn)
+    return psrn
 
 
 def compression(filename, quality):
@@ -22,3 +33,6 @@ def transformation(filename):
     # https://stackabuse.com/affine-image-transformations-in-python-with-numpy-pillow-and-opencv/
     im = Image.open(filename)
     return ''
+
+
+checkPSNR("", "")
