@@ -35,8 +35,17 @@ def distorition(filename):
     return ''
 
 
-def resize_attack(filename):
-    return ''
+def resize_attack(filename, scale_percent):
+    img = cv2.imread(IMAGES_DIR + filename)
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+    # print('Resized Dimensions : ', resized.shape)
+    # cv2.imshow("Resized image", resized)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    return resized
 
 
 def gaussian_noise(filename):
@@ -55,13 +64,16 @@ def salt_and_pepper(filename):
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
     noise_img = random_noise(im_arr, mode='s&p', salt_vs_pepper=0.5)
     noise_img = (255 * noise_img).astype(np.uint8)
+    Image.fromarray(noise_img).show()
     return noise_img
 
 
-compression("lenna_512.jpg", 50)
-salt_and_pepper("lenna_256.jpg")
-gaussian_noise("lenna_256.jpg")
-checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
+# compression("lenna_512.jpg", 50)
+# salt_and_pepper("lenna_256.jpg")
+# gaussian_noise("lenna_256.jpg")
+# checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
+resize_attack("lenna_256.jpg", 200)
+resize_attack("lenna_256.jpg", 50)
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
