@@ -36,3 +36,87 @@ def transformation(filename):
 
 
 checkPSNR("", "")
+
+# KAMIL PSEUDO CODE/ SOME KIND OF CODE
+
+
+def performAttacks():
+    #arrayWithExtractedWatermarks
+    #Attacks for DWT_GRAY_LL
+    #watermarkedImage = DWT.DWT_GRAY_LL_EMBED(coverImagePath,watermarkImagePath)
+    #watermarkedImagesAfterAttack = performAttacksOnWatermarkedImage(watermarkedImage)
+    #DWT_GRAY_LL_watermarksAfterAttack = extractWatermarkFromArray(watermarkedImagesAfterAttack)
+
+    #Attack for DWT_SVD_GRAY_LL
+    # watermarkedImage = DWT.DWT_SVD_GRAY_LL_EMBED(coverImagePath,watermarkImagePath)
+    # watermarkedImagesAfterAttack = performAttacksOnWatermarkedImage(watermarkedImage)
+    # DWT_SVD_GRAY_LL_watermarksAfterAttack = extractWatermarkFromArray(watermarkedImagesAfterAttack)
+
+def performAttacksOnWatermarkedImage(imageWithWatermark,method): #method = DWT.DWT_GRAY_LL
+
+    #saltAndPepperAttackResult = saltAndPepper(imageWithWatermark)
+    #cv2.imwrite(''+method+'_watermarkedImageAfterSaltAndPepperAttack', saltAndPepperAttackResult) #zapis
+    #GausianAttackResult = gausian(imageWithWatermark)
+    #cv2.imwrite
+    #transformationAttackResult = transformation(imageWithWatermark)
+    #cv2.imwrite
+    #compressionAttackResult = compression(imageWithWatermark)
+    #cv2.imwrite
+
+    #attacksTable = [pathTosaltAndPepperAttack,pathToGausianAttack, pathToTransformationAttack, pathToCompressionAttack ]
+
+    #return attacksTable
+
+def extractWatermarksFromArray(tableWithAttackedImagesPaths,method): # method = DWT.DWT_GRAY_LL
+    #counter = 0
+    #method + "_EXTRACT"
+    #extractedWatermarksArray
+
+    #for path in tableWithAttackedImagesPaths
+        #extractedWatermark = runAppropriateExtracMethod(path, method)
+        #extractedWatermarksArray[counter] = extractedWatermark
+        #counter ++
+
+    #return extractedWatermarksArray
+
+
+def runAppropriateExtracMethod(pathToWatermarkedImageAfterAttack, method): #method = DWT.DWT_GRAY_LL
+    #coverImagePath= "..."
+    #watermarkImagePath = "..."
+    #extractedWatermark
+    # switch(Method)
+        # case DWT.DWT_GRAY_LL
+        #   extractedWatermark= DWT.DWT_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, pathToWatermarkedImageAfterAttack )
+        #break
+        # case DWT.DWT_SVD_GRAY_LL
+        #   extractedWatermark = DWT.DWT_SVD_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, pathToWatermarkedImageAfterAttack ) #added _ExTRACT TO METHOD NAME
+        #break
+        #default ...
+
+    #return extractedWatermark
+
+def getExtractedWatermarkNormalWay(coverImagePath,watermarkImagePath, method):
+    # extractedWatermark = runAppropriateImageWatermarkingMethod(coverImagePath,watermarkImagePath, method)
+    # return extracted watermark
+
+def runAppropriateImageWatermarkingMethod(method):  # method = DWT.DWT_GRAY_LL
+
+    # extractedWatermark
+    # switch(Method)
+    # case DWT.DWT_GRAY_LL
+    #   watermarkedImagePath= DWT.DWT_GRAY_LL(coverImagePath,watermarkImagePath) #no added _EXTRACT TO METHOD NAME
+    #   extractedWatermark = DWT.DWT_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, watermarkedImagePath)
+    # break
+    # case DWT.DWT_SVD_GRAY_LL
+    #   watermarkedImagePath= DWT_SVD.DWT_GRAY_LL(coverImagePath,watermarkImagePath) #no added _EXTRACT TO METHOD NAME
+    #   extractedWatermark = DWT.DWT_SVD_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, watermarkedImagePath)
+    # break
+    # default ...
+
+    # return extractedWatermark
+
+def compareWatermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
+
+    #psnr(watermarkAfterAttack)
+    #psnr(watermarkAfterNormalExtraction)
+    #DO SMTH

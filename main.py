@@ -63,7 +63,7 @@ def rgbMenu():
 
     transformationOptions = {1: DWT_SVD.DWT_SVD_RGB_LL, 2: DWT_SVD.DWT_SVD_RGB_HL, 5: DWT.DWT_RGB_LL}
     transformationVal = int(input(
-        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.SVD-DWT_LL \n2.SVD-DWT_HL \n3.DCT-DWT_LL\n4.DCT_DWT_HL \n5.DWT_LL\n'))
+        '\n\033[92mWhat type of transformation do you want to perform?\033[0m \n1.DWT_SVD_LL \n2.DWT_SVD_HL \n3.DCT-DWT_LL\n4.DCT_DWT_HL \n5.DWT_LL\n'))
 
     processOptions = {1: "watermark", 2: "attack"}
     processOrAttack= int(input('\n\033[92mwhat do you want to perform?\033[0m \n1.Perform watermarking \n2.Perform attacks\n '))

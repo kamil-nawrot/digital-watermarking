@@ -375,10 +375,7 @@ def DWT_SVD_GRAY_LL(coverImagePath,watermarkImagePath):
     return extracted_watermark
 
 def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
-    # coverImage = cv2.imread('mandrill.jpg', 0)
-    # cv2.imshow('orginal image', coverImage)
-    # watermarkImage = cv2.imread('lenna.jpg', 0)
-    # cv2.imshow('watermark', watermarkImage)
+
     coverImage = readFile(coverImagePath, "GRAY")
     watermarkImage = readFile(watermarkImagePath, "GRAY")
     cv2.imshow('orginal image', coverImage)
