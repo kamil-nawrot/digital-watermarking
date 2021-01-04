@@ -68,12 +68,23 @@ def salt_and_pepper(filename):
     return noise_img
 
 
+def rotate_image(filename, angle):
+    image = cv2.imread(IMAGES_DIR + filename)
+    print(image.shape)
+    row, col, colors = image.shape
+    center = tuple(np.array([row, col]) / 2)
+    rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
+    new_image = cv2.warpAffine(image, rot_mat, (col, row))
+    return new_image
+
+
 # compression("lenna_512.jpg", 50)
 # salt_and_pepper("lenna_256.jpg")
 # gaussian_noise("lenna_256.jpg")
 # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
-resize_attack("lenna_256.jpg", 200)
-resize_attack("lenna_256.jpg", 50)
+# resize_attack("lenna_256.jpg", 200)
+# resize_attack("lenna_256.jpg", 50)
+rotate_image("lenna_256.jpg", 90)
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
