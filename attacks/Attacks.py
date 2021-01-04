@@ -7,13 +7,10 @@ from PIL import Image
 from skimage.util import random_noise
 
 IMAGES_DIR = "../images/"
-
+import matplotlib.pyplot as plt
 
 def checkPSNR(original, attacked):
     img1 = cv2.imread(IMAGES_DIR + original)
-    print(img1)
-    print('0000000000000000000000000000')
-    print(attacked)
     # img2 = cv2.imread("compressed/Compressed_1606579782_lenna_256.jpg")
     psrn = cv2.PSNR(img1, attacked)
 
@@ -30,8 +27,22 @@ def compression(filename, quality):
 
 
 def distorition(filename):
+    color_img = cv2.imread(IMAGES_DIR + filename)
+    img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
     # https://stackoverflow.com/questions/60609607/how-to-create-this-barrel-radial-distortion-with-python-opencv
     # https://www.geeksforgeeks.org/python-distort-method-in-wand/
+
+    A = img.shape[0] / 3.0
+    w = 2.0 / img.shape[1]
+
+    shift = lambda x: A * np.sin(1 * np.pi * x * w)
+
+    for i in range(img.shape[0]):
+        img[:, i] = np.roll(img[:, i], int(shift(i)))
+
+    plt.imshow(img, cmap=plt.cm.gray)
+    plt.show()
+
     return ''
 
 
@@ -78,13 +89,17 @@ def rotate_image(filename, angle):
     return new_image
 
 
+small_lena = "lenna_256.jpg"
+big_lena = "lenna_512.jpg"
+
 # compression("lenna_512.jpg", 50)
 # salt_and_pepper("lenna_256.jpg")
 # gaussian_noise("lenna_256.jpg")
 # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
 # resize_attack("lenna_256.jpg", 200)
 # resize_attack("lenna_256.jpg", 50)
-rotate_image("lenna_256.jpg", 90)
+# rotate_image(small_lena, 90)
+distorition(big_lena)
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
