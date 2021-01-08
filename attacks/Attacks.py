@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 from PIL import Image
 from skimage.util import random_noise
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 # cv2.imread(...)
@@ -92,17 +94,36 @@ def salt_and_pepper(im, amount, ratio):
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
 
+IMAGES_DIR = "processed_images\\"
+def perform_attack(watermarked_img,invoked_by, attack_method, *args):
+    # switcher = {
+    #     "rotate_image": rotate_image(watermarked_img, args[0]),
+    #     "distortion": distorition(watermarked_img),
+    #     "resize_attack": resize_attack(watermarked_img, args[0]),
+    #     "compression": compression(watermarked_img, args[0]),
+    #     "gaussian_noise": gaussian_noise(watermarked_img),
+    #     "salt_and_pepper": salt_and_pepper(watermarked_img, args[0],args[1]),
+    # }
+    # imageAfterAttack = switcher[attack_method]
+    imageAfterAttack = None
+    if (attack_method == "rotate_image"):
+        imageAfterAttack = rotate_image(watermarked_img, args[0])
+    elif (attack_method == "distortion"):
+        imageAfterAttack = distorition(watermarked_img)
+    elif (attack_method == "resize_attack"):
+        imageAfterAttack = resize_attack(watermarked_img, args[0])
+    elif (attack_method == "compression"):
+        imageAfterAttack = compression(watermarked_img, args[0])
+    elif (attack_method == "gaussian_noise"):
+        imageAfterAttack = gaussian_noise(watermarked_img)
+    elif (attack_method == "salt_and_pepper"):
+        imageAfterAttack = salt_and_pepper(watermarked_img, args[0],args[1])
+    else:
+        raise Exception('Wrong attack name')
 
-def perform_attack(watermarked_img, method, *args):
-    switcher = {
-        "rotate_image": rotate_image(watermarked_img, args[0]),
-        "distortion": distorition(watermarked_img),
-        "resize_attack": resize_attack(watermarked_img, args[0]),
-        "compression": compression(watermarked_img, args[0]),
-        "gaussian_noise": gaussian_noise(watermarked_img),
-        "salt_and_pepper": salt_and_pepper(watermarked_img, args[0],args[1]),
-    }
-    imageAfterAttack = switcher[method]
+    logging.debug('before' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg')
+    cv2.imwrite('' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg', imageAfterAttack.astype(np.uint8))
+    logging.debug('after' + IMAGES_DIR + 'attacked_watermarked_img_' + invoked_by + '_' + attack_method + '.jpg')
     return imageAfterAttack
 
 

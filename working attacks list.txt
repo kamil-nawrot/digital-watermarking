@@ -1,0 +1,5 @@
+1 works
+2 do not work - Unsupported depth of input image:
+3 - works
+
+10 works 
