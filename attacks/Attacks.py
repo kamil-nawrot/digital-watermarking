@@ -78,23 +78,7 @@ def salt_pepper(im, amount, ratio):
     return noise_img
 
 
-#
-# small_lena = "lenna_256.jpg"
-# big_lena = "lenna_512.jpg"
-# input_image = Image.open("../images/" + big_lena)
-# input_image_cv = cv2.imread("../images/" + big_lena)
-#
-# compression(input_image, 1)
-#
-# salt_and_pepper(input_image, 0.1, 1)
-# # gaussian_noise("lenna_256.jpg")
-# # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
-# # resize_attack("lenna_256.jpg", 200)
-# # resize_attack("lenna_256.jpg", 50)
-# rotate_image(input_image_cv, 90)
-# # distorition(big_lena)
-# check_psnr(input_image_cv, salt_and_pepper(input_image, 0.1, 1))
-# check_psnr(input_image_cv, input_image_cv)
+
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
@@ -113,17 +97,17 @@ def perform_attack(watermarked_img, invoked_by, attack_method, *args):
     # }
     # imageAfterAttack = switcher[attack_method]
     image_after_attack = None
-    if (attack_method == "rotate_image"):
+    if attack_method == "rotate_image":
         image_after_attack = rotate_image(watermarked_img, args[0])
-    elif (attack_method == "distortion"):
+    elif attack_method == "distortion":
         image_after_attack = distorition(watermarked_img)
-    elif (attack_method == "resize_attack"):
+    elif attack_method == "resize_attack":
         image_after_attack = resize_attack(watermarked_img, args[0])
-    elif (attack_method == "compression"):
+    elif attack_method == "compression":
         image_after_attack = compression(watermarked_img, args[0])
-    elif (attack_method == "gaussian_noise"):
+    elif attack_method == "gaussian_noise":
         image_after_attack = gaussian_noise(watermarked_img)
-    elif (attack_method == "salt_and_pepper"):
+    elif attack_method == "salt_pepper":
         image_after_attack = salt_pepper(watermarked_img, args[0], args[1])
     else:
         raise Exception('Wrong attack name')
@@ -200,3 +184,22 @@ def compare_watermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
 # psnr(watermarkAfterAttack)
 # psnr(watermarkAfterNormalExtraction)
 # DO SMTH
+
+
+# _____________________________ PLAYGROUND
+# small_lena = "lenna_256.jpg"
+# big_lena = "lenna_512.jpg"
+# input_image = Image.open("../images/" + big_lena)
+# input_image_cv = cv2.imread("../images/" + big_lena)
+#
+# compression(input_image, 1)
+#
+# salt_and_pepper(input_image, 0.1, 1)
+# # gaussian_noise("lenna_256.jpg")
+# # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
+# # resize_attack("lenna_256.jpg", 200)
+# # resize_attack("lenna_256.jpg", 50)
+# rotate_image(input_image_cv, 90)
+# # distorition(big_lena)
+# check_psnr(input_image_cv, salt_and_pepper(input_image, 0.1, 1))
+# check_psnr(input_image_cv, input_image_cv)
