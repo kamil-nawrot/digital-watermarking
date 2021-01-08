@@ -61,7 +61,7 @@ def DWT_RGB_LL(coverImagePath, watermarkImagePath, attaack_name = None, *args):
 
         # watermarked_img.resize((512, 512))
         watermarked_img = cv2.resize(watermarked_img, (512, 512))
-        print("xD")
+        logging.debug("after resize to (512,512) after resize attack in DWT_RGB_LL")
     ###
     print ("xD")
     cover_red1 = watermarked_img[:, :, 2]
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     elif val == 5:
         options[1](coverImagePath, watermarkImagePath, "gaussian_noise")
     elif val == 6:
-        options[1](coverImagePath, watermarkImagePath,"salt_and_pepper", 0.1, 1)
+        options[1](coverImagePath, watermarkImagePath,"salt_and_pepper", 0.3, 100)
     elif val == 7:
         options[1](coverImagePath, watermarkImagePath)
 
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     elif val == 12:
         options[2](coverImagePath, watermarkImagePath, "gaussian_noise")
     elif val == 13:
-        options[2](coverImagePath, watermarkImagePath, "salt_and_pepper", 0.1, 1)
+        options[2](coverImagePath, watermarkImagePath, "salt_and_pepper",  0.3, 100)
     elif val == 14:
         options[2](coverImagePath, watermarkImagePath)
     else:

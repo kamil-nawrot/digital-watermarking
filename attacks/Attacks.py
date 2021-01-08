@@ -105,26 +105,26 @@ def perform_attack(watermarked_img,invoked_by, attack_method, *args):
     #     "salt_and_pepper": salt_and_pepper(watermarked_img, args[0],args[1]),
     # }
     # imageAfterAttack = switcher[attack_method]
-    imageAfterAttack = None
+    image_after_attack = None
     if (attack_method == "rotate_image"):
-        imageAfterAttack = rotate_image(watermarked_img, args[0])
+        image_after_attack = rotate_image(watermarked_img, args[0])
     elif (attack_method == "distortion"):
-        imageAfterAttack = distorition(watermarked_img)
+        image_after_attack = distorition(watermarked_img)
     elif (attack_method == "resize_attack"):
-        imageAfterAttack = resize_attack(watermarked_img, args[0])
+        image_after_attack = resize_attack(watermarked_img, args[0])
     elif (attack_method == "compression"):
-        imageAfterAttack = compression(watermarked_img, args[0])
+        image_after_attack = compression(watermarked_img, args[0])
     elif (attack_method == "gaussian_noise"):
-        imageAfterAttack = gaussian_noise(watermarked_img)
+        image_after_attack = gaussian_noise(watermarked_img)
     elif (attack_method == "salt_and_pepper"):
-        imageAfterAttack = salt_and_pepper(watermarked_img, args[0],args[1])
+        image_after_attack = salt_and_pepper(watermarked_img, args[0],args[1])
     else:
         raise Exception('Wrong attack name')
 
     logging.debug('before' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg')
-    cv2.imwrite('' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg', imageAfterAttack.astype(np.uint8))
+    cv2.imwrite('' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg', image_after_attack.astype(np.uint8))
     logging.debug('after' + IMAGES_DIR + 'attacked_watermarked_img_' + invoked_by + '_' + attack_method + '.jpg')
-    return imageAfterAttack
+    return image_after_attack
 
 
 # arrayWithExtractedWatermarks

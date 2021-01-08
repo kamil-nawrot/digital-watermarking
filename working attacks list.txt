@@ -1,5 +1,29 @@
-1 works
-2 do not work - Unsupported depth of input image:
-3 - works
+1 DWT_RGB_LL_rotate_image | works
+2 DWT_RGB_LL_distortion | do not work - Unsupported depth of input image:
+3 DWT_RGB_LL_distortion | works
+4 DWT_RGB_LL_compression | do not work - 'numpy.ndarray' object has no attribute 'save'
+5 DWT_RGB_LL_gussian_noise  | do not work but do not throw any exeption (returns white images, both watermarked image and extracted watermark)
+6 DWT_RGB_LL_salt_and_pepper | do not work (returns white images, both watermarked image and extracted watermark)
+7 DWT_RGB_LL Normal run | work
+8 DWT_GRAY_LL_rotate_image | do not work - not enough values to unpack (expected 3, got 2)
+9 DWT_GRAY_LL_distortion |do not wrok
+10 DWT_GRAY_LL_resize_attack | works 
+11 DWT_GRAY_LL_compression | do not work -'numpy.ndarray' object has no attribute 'save'
+12 DWT_GRAY_LL_gussian_noise | probably do not work, need to check it deeply
+13 DWT_GRAY_LL_salt_and_pepper | probably do not work, need to check it deeply
+14 DWT_GRAY_LL normal run | works
 
-10 works 
+
+DO NOT WORK
+DWT_RGB_LL_distortion
+DWT_RGB_LL_compression
+DWT_RGB_LL_gussian_noise
+DWT_RGB_LL_salt_and_pepper
+
+DWT_GRAY_LL_rotate_image
+DWT_GRAY_LL_distortion
+DWT_GRAY_LL_compression
+
+DWT_GRAY_LL_gussian_noise
+DWT_GRAY_LL_salt_and_pepper
+
