@@ -1,11 +1,12 @@
 import calendar
+import logging
 import time
 
 import cv2
 import numpy as np
 from PIL import Image
 from skimage.util import random_noise
-import logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -65,13 +66,14 @@ def gaussian_noise(im):
 
 
 # Image.open(...)
-def salt_and_pepper(im, amount, ratio):
+def salt_pepper(im, amount, ratio):
     im_arr = np.asarray(im)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
     noise_img = random_noise(im_arr, mode='s&p', amount=amount, salt_vs_pepper=ratio)
     noise_img = (255 * noise_img).astype(np.uint8)
     # Image.fromarray(noise_img).show()
     return noise_img
+
 
 #
 # small_lena = "lenna_256.jpg"
@@ -95,7 +97,9 @@ def salt_and_pepper(im, amount, ratio):
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
 
 IMAGES_DIR = "processed_images\\"
-def perform_attack(watermarked_img,invoked_by, attack_method, *args):
+
+
+def perform_attack(watermarked_img, invoked_by, attack_method, *args):
     # switcher = {
     #     "rotate_image": rotate_image(watermarked_img, args[0]),
     #     "distortion": distorition(watermarked_img),
@@ -117,12 +121,12 @@ def perform_attack(watermarked_img,invoked_by, attack_method, *args):
     elif (attack_method == "gaussian_noise"):
         image_after_attack = gaussian_noise(watermarked_img)
     elif (attack_method == "salt_and_pepper"):
-        image_after_attack = salt_and_pepper(watermarked_img, args[0],args[1])
+        image_after_attack = salt_pepper(watermarked_img, args[0], args[1])
     else:
         raise Exception('Wrong attack name')
 
-    logging.debug('before' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg')
-    cv2.imwrite('' + IMAGES_DIR + 'attacked_watermarked_img_'+ invoked_by + '_' + attack_method + '.jpg', image_after_attack.astype(np.uint8))
+    logging.debug('before' + IMAGES_DIR + 'attacked_watermarked_img_' + invoked_by + '_' + attack_method + '.jpg')
+    cv2.imwrite('' + IMAGES_DIR + 'attacked_watermarked_img_' + invoked_by + '_' + attack_method + '.jpg', image_after_attack.astype(np.uint8))
     logging.debug('after' + IMAGES_DIR + 'attacked_watermarked_img_' + invoked_by + '_' + attack_method + '.jpg')
     return image_after_attack
 
@@ -138,22 +142,17 @@ def perform_attack(watermarked_img,invoked_by, attack_method, *args):
 # watermarkedImagesAfterAttack = performAttacksOnWatermarkedImage(watermarkedImage)
 # DWT_SVD_GRAY_LL_watermarksAfterAttack = extractWatermarkFromArray(watermarkedImagesAfterAttack)
 
-def performAttacksOnWatermarkedImage(imageWithWatermark, method):  # method = DWT.DWT_GRAY_LL
-    return
+def perform_attacks_on_watermarked_image(im_wm, method):  # method = DWT.DWT_GRAY_LL
+    result_salt_pepper = salt_pepper(im_wm, 0.1, 0.5)
+    # cv2.imwrite('' + method + '_watermarkedImageAfterSaltAndPepperAttack', result_salt_pepper)  # zapis
+    result_gaussian = gaussian_noise(im_wm)
+    # cv2.imwrite
+    result_resize = resize_attack(im_wm, 2)
+    # cv2.imwrite
+    result_compression = compression(im_wm, 25)
+    # cv2.imwrite
 
-
-# saltAndPepperAttackResult = saltAndPepper(imageWithWatermark)
-# cv2.imwrite(''+method+'_watermarkedImageAfterSaltAndPepperAttack', saltAndPepperAttackResult) #zapis
-# GausianAttackResult = gausian(imageWithWatermark)
-# cv2.imwrite
-# transformationAttackResult = transformation(imageWithWatermark)
-# cv2.imwrite
-# compressionAttackResult = compression(imageWithWatermark)
-# cv2.imwrite
-
-# attacksTable = [pathTosaltAndPepperAttack,pathToGausianAttack, pathToTransformationAttack, pathToCompressionAttack ]
-
-# return attacksTable
+    return [result_salt_pepper, result_gaussian, result_resize, result_compression]
 
 def extractWatermarksFromArray(tableWithAttackedImagesPaths, method):  # method = DWT.DWT_GRAY_LL
     return
