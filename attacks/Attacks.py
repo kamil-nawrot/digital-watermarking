@@ -6,100 +6,88 @@ import numpy as np
 from PIL import Image
 from skimage.util import random_noise
 
-IMAGES_DIR = "../images/"
-import matplotlib.pyplot as plt
 
-def checkPSNR(original, attacked):
-    img1 = cv2.imread(IMAGES_DIR + original)
-    # img2 = cv2.imread("compressed/Compressed_1606579782_lenna_256.jpg")
-    psrn = cv2.PSNR(img1, attacked)
-
-    print(psrn)
-    return psrn
+# cv2.imread(...)
+def check_psnr(original, attacked):
+    print(cv2.PSNR(original, attacked))
+    return cv2.PSNR(original, attacked)
 
 
-def compression(filename, quality):
-    # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
-    im = Image.open(IMAGES_DIR + filename)
-    ts = calendar.timegm(time.gmtime())
-    im.save("../attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + "_" + filename, optimize=True, quality=quality)
-    return ''
+# cv2.imread(...)
+def rotate_image(im, angle):
+    row, col, colors = im.shape
+    center = tuple(np.array([row, col]) / 2)
+    rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
+    return cv2.warpAffine(im, rot_mat, (col, row))
 
 
-def distorition(filename):
-    color_img = cv2.imread(IMAGES_DIR + filename)
+# cv2.imread(...)
+def distorition(im):
+    color_img = im
     img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
-    # https://stackoverflow.com/questions/60609607/how-to-create-this-barrel-radial-distortion-with-python-opencv
-    # https://www.geeksforgeeks.org/python-distort-method-in-wand/
-
     A = img.shape[0] / 3.0
     w = 2.0 / img.shape[1]
-
     shift = lambda x: A * np.sin(1 * np.pi * x * w)
-
     for i in range(img.shape[0]):
         img[:, i] = np.roll(img[:, i], int(shift(i)))
-
-    plt.imshow(img, cmap=plt.cm.gray)
-    plt.show()
-
-    return ''
+    return img
 
 
-def resize_attack(filename, scale_percent):
-    img = cv2.imread(IMAGES_DIR + filename)
-    width = int(img.shape[1] * scale_percent / 100)
-    height = int(img.shape[0] * scale_percent / 100)
+# cv.imread(...)
+def resize_attack(im, scale_percent):
+    width = int(im.shape[1] * scale_percent / 100)
+    height = int(im.shape[0] * scale_percent / 100)
     dim = (width, height)
-    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    # print('Resized Dimensions : ', resized.shape)
-    # cv2.imshow("Resized image", resized)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    return resized
+    return cv2.resize(im, dim, interpolation=cv2.INTER_AREA)
 
 
-def gaussian_noise(filename):
-    im = Image.open(IMAGES_DIR + filename)
+######################## works only with Image.open()
+
+# Image.open(...)
+def compression(im, quality):
+    # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
+    ts = calendar.timegm(time.gmtime())
+    path = "../attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + ".jpg"
+    im.save(path, optimize=True, quality=quality)
+    return cv2.imread(path)
+
+
+# Image.open(...)
+def gaussian_noise(im):
     im_arr = np.asarray(im)
     # can parametrize: clip, mean, var
     noise_img = random_noise(im_arr, mode='gaussian')
     noise_img = (255 * noise_img).astype(np.uint8)
-    img = Image.fromarray(noise_img)
+    img = Image.fromarray(noise_img)  # remove ONLY if it works with Kamil's idea
     return noise_img
 
 
-def salt_and_pepper(filename):
-    im = Image.open(IMAGES_DIR + filename)
+# Image.open(...)
+def salt_and_pepper(im, amount, ratio):
     im_arr = np.asarray(im)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
-    noise_img = random_noise(im_arr, mode='s&p', salt_vs_pepper=0.5)
+    noise_img = random_noise(im_arr, mode='s&p', amount=amount, salt_vs_pepper=ratio)
     noise_img = (255 * noise_img).astype(np.uint8)
-    Image.fromarray(noise_img).show()
+    # Image.fromarray(noise_img).show()
     return noise_img
-
-
-def rotate_image(filename, angle):
-    image = cv2.imread(IMAGES_DIR + filename)
-    print(image.shape)
-    row, col, colors = image.shape
-    center = tuple(np.array([row, col]) / 2)
-    rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
-    new_image = cv2.warpAffine(image, rot_mat, (col, row))
-    return new_image
 
 
 small_lena = "lenna_256.jpg"
 big_lena = "lenna_512.jpg"
+input_image = Image.open("../images/" + big_lena)
+input_image_cv = cv2.imread("../images/" + big_lena)
 
-# compression("lenna_512.jpg", 50)
-# salt_and_pepper("lenna_256.jpg")
+compression(input_image, 1)
+
+salt_and_pepper(input_image, 0.1, 1)
 # gaussian_noise("lenna_256.jpg")
 # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
 # resize_attack("lenna_256.jpg", 200)
 # resize_attack("lenna_256.jpg", 50)
-# rotate_image(small_lena, 90)
-distorition(big_lena)
+rotate_image(input_image_cv, 90)
+# distorition(big_lena)
+check_psnr(input_image_cv, salt_and_pepper(input_image, 0.1, 1))
+check_psnr(input_image_cv, input_image_cv)
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
