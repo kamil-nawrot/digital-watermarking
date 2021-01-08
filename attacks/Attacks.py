@@ -71,30 +71,39 @@ def salt_and_pepper(im, amount, ratio):
     # Image.fromarray(noise_img).show()
     return noise_img
 
-
-small_lena = "lenna_256.jpg"
-big_lena = "lenna_512.jpg"
-input_image = Image.open("../images/" + big_lena)
-input_image_cv = cv2.imread("../images/" + big_lena)
-
-compression(input_image, 1)
-
-salt_and_pepper(input_image, 0.1, 1)
-# gaussian_noise("lenna_256.jpg")
-# checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
-# resize_attack("lenna_256.jpg", 200)
-# resize_attack("lenna_256.jpg", 50)
-rotate_image(input_image_cv, 90)
-# distorition(big_lena)
-check_psnr(input_image_cv, salt_and_pepper(input_image, 0.1, 1))
-check_psnr(input_image_cv, input_image_cv)
+#
+# small_lena = "lenna_256.jpg"
+# big_lena = "lenna_512.jpg"
+# input_image = Image.open("../images/" + big_lena)
+# input_image_cv = cv2.imread("../images/" + big_lena)
+#
+# compression(input_image, 1)
+#
+# salt_and_pepper(input_image, 0.1, 1)
+# # gaussian_noise("lenna_256.jpg")
+# # checkPSNR("lenna_256.jpg", gaussian_noise("lenna_256.jpg"))
+# # resize_attack("lenna_256.jpg", 200)
+# # resize_attack("lenna_256.jpg", 50)
+# rotate_image(input_image_cv, 90)
+# # distorition(big_lena)
+# check_psnr(input_image_cv, salt_and_pepper(input_image, 0.1, 1))
+# check_psnr(input_image_cv, input_image_cv)
 
 
 # KAMIL PSEUDO CODE/ SOME KIND OF CODE
 
 
-def performAttacks():
-    return
+def perform_attack(watermarked_img, method, *args):
+    switcher = {
+        "rotate_image": rotate_image(watermarked_img, args[0]),
+        "distortion": distorition(watermarked_img),
+        "resize_attack": resize_attack(watermarked_img, args[0]),
+        "compression": compression(watermarked_img, args[0]),
+        "gaussian_noise": gaussian_noise(watermarked_img),
+        "salt_and_pepper": salt_and_pepper(watermarked_img, args[0],args[1]),
+    }
+    imageAfterAttack = switcher[method]
+    return imageAfterAttack
 
 
 # arrayWithExtractedWatermarks

@@ -70,7 +70,8 @@ def rgbMenu():
 
     if processOptions[processOrAttack] == "watermark":
         if transformationVal != 3 and transformationVal !=4:
-            transformationOptions[transformationVal](coverImagePathDwtSvd,watermarkImagePathDwtSvd)
+            # DWT param
+            transformationOptions[transformationVal](coverImagePathDwtSvd,watermarkImagePathDwtSvd,"")
         elif transformationVal == 3:
             baseImage = DWT_DCT.Image("base", coverImagePathDctDwt, (1024, 1024),8)
             watermarkImage = DWT_DCT.Image("watermark", watermarkImagePathDctDwt, (128, 128),8)
