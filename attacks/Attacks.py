@@ -7,6 +7,9 @@ import numpy as np
 from PIL import Image
 from skimage.util import random_noise
 
+import DWT
+import DWT_SVD
+
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -176,30 +179,21 @@ def run_appropriate_extract_method(im_with_wm_after_attack, method):  # method =
     return chosen_method(im_path, wm_path, im_with_wm_after_attack)
 
 
-def get_extracted_watermark_normal_way(coverImagePath, watermarkImagePath, method):
+def get_extracted_watermark_normal_way(im_path, wm_path, method):
+    return run_appropriate_image_watermarking_method(im_path, wm_path, method)
+
+
+def run_appropriate_image_watermarking_method(im_path, wm_path, method):  # method = DWT.DWT_GRAY_LL
+
+    if method == "DWT.DWT_GRAY_LL":
+        im_with_wm_path = DWT.DWT_GRAY_LL(im_path, wm_path)
+        return DWT.DWT_GRAY_LL_EXTRACT(im_path, wm_path, im_with_wm_path)
+    elif method == "DWT.DWT_SVD_GRAY_LL":
+        im_with_wm_path = DWT_SVD.DWT_GRAY_LL(im_path, wm_path)
+        return DWT.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, im_with_wm_path)
+
     return
 
-
-# extractedWatermark = runAppropriateImageWatermarkingMethod(coverImagePath,watermarkImagePath, method)
-# return extracted watermark
-
-def run_appropriate_image_watermarking_method(method):  # method = DWT.DWT_GRAY_LL
-    return
-
-
-# extractedWatermark
-# switch(Method)
-# case DWT.DWT_GRAY_LL
-#   watermarkedImagePath= DWT.DWT_GRAY_LL(coverImagePath,watermarkImagePath) #no added _EXTRACT TO METHOD NAME
-#   extractedWatermark = DWT.DWT_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, watermarkedImagePath)
-# break
-# case DWT.DWT_SVD_GRAY_LL
-#   watermarkedImagePath= DWT_SVD.DWT_GRAY_LL(coverImagePath,watermarkImagePath) #no added _EXTRACT TO METHOD NAME
-#   extractedWatermark = DWT.DWT_SVD_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, watermarkedImagePath)
-# break
-# default ...
-
-# return extractedWatermark
 
 def compare_watermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
     return
