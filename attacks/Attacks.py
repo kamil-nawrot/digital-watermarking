@@ -142,35 +142,29 @@ def perform_attack(watermarked_img, invoked_by, attack_method, *args):
 # watermarkedImagesAfterAttack = performAttacksOnWatermarkedImage(watermarkedImage)
 # DWT_SVD_GRAY_LL_watermarksAfterAttack = extractWatermarkFromArray(watermarkedImagesAfterAttack)
 
-def perform_attacks_on_watermarked_image(im_wm, method):  # method = DWT.DWT_GRAY_LL
+def perform_all_attacks_on_watermarked_image(im_wm, method):  # method = DWT.DWT_GRAY_LL
     result_salt_pepper = salt_pepper(im_wm, 0.1, 0.5)
-    # cv2.imwrite('' + method + '_watermarkedImageAfterSaltAndPepperAttack', result_salt_pepper)  # zapis
     result_gaussian = gaussian_noise(im_wm)
-    # cv2.imwrite
     result_resize = resize_attack(im_wm, 2)
-    # cv2.imwrite
     result_compression = compression(im_wm, 25)
-    # cv2.imwrite
+    result_rotate = rotate_image(im_wm, 90)
+    result_distortion = distorition(im_wm)
 
-    return [result_salt_pepper, result_gaussian, result_resize, result_compression]
-
-def extractWatermarksFromArray(tableWithAttackedImagesPaths, method):  # method = DWT.DWT_GRAY_LL
-    return
+    return [result_salt_pepper, result_gaussian, result_resize, result_compression, result_rotate, result_distortion]
 
 
-# counter = 0
-# method + "_EXTRACT"
-# extractedWatermarksArray
+def extract_watermarks_from_images(images, method):  # method = DWT.DWT_GRAY_LL
+    method + "_EXTRACT"  # wtf ???
+    extracted_watermarks = []
 
-# for path in tableWithAttackedImagesPaths
-# extractedWatermark = runAppropriateExtracMethod(path, method)
-# extractedWatermarksArray[counter] = extractedWatermark
-# counter ++
+    for path in images:
+        extracted_wm = run_appropriate_extrac_method(path, method)
+        extracted_watermarks.append(extracted_wm)
 
-# return extractedWatermarksArray
+    return extracted_watermarks
 
 
-def runAppropriateExtracMethod(pathToWatermarkedImageAfterAttack, method):  # method = DWT.DWT_GRAY_LL
+def run_appropriate_extrac_method(pathToWatermarkedImageAfterAttack, method):  # method = DWT.DWT_GRAY_LL
     return
 
 
