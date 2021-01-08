@@ -158,7 +158,6 @@ def read_file(path, color): # color == GRAY or RGB
     else:
         print("failed to read image")
 
-
 #TESTS
 
 
@@ -211,6 +210,9 @@ if __name__ == "__main__":
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+
 
 # add to Attacks
 # def perform_attack(watermarked_img, method, *args):

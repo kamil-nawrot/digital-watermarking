@@ -87,15 +87,7 @@ IMAGES_DIR = "processed_images\\"
 
 
 def perform_attack(watermarked_img, invoked_by, attack_method, *args):
-    # switcher = {
-    #     "rotate_image": rotate_image(watermarked_img, args[0]),
-    #     "distortion": distorition(watermarked_img),
-    #     "resize_attack": resize_attack(watermarked_img, args[0]),
-    #     "compression": compression(watermarked_img, args[0]),
-    #     "gaussian_noise": gaussian_noise(watermarked_img),
-    #     "salt_and_pepper": salt_and_pepper(watermarked_img, args[0],args[1]),
-    # }
-    # imageAfterAttack = switcher[attack_method]
+
     image_after_attack = None
     if attack_method == "rotate_image":
         image_after_attack = rotate_image(watermarked_img, args[0])
@@ -181,6 +173,7 @@ def run_appropriate_image_watermarking_method(im_path, wm_path, method):  # meth
 
 def compare_watermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
     return
+
 # psnr(watermarkAfterAttack)
 # psnr(watermarkAfterNormalExtraction)
 # DO SMTH
