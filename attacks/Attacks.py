@@ -158,38 +158,32 @@ def extract_watermarks_from_images(images, method):  # method = DWT.DWT_GRAY_LL
     extracted_watermarks = []
 
     for path in images:
-        extracted_wm = run_appropriate_extrac_method(path, method)
+        extracted_wm = run_appropriate_extract_method(path, method)
         extracted_watermarks.append(extracted_wm)
 
     return extracted_watermarks
 
 
-def run_appropriate_extrac_method(pathToWatermarkedImageAfterAttack, method):  # method = DWT.DWT_GRAY_LL
-    return
+def run_appropriate_extract_method(im_with_wm_after_attack, method):  # method = DWT.DWT_GRAY_LL
+    im_path = "..."
+    wm_path = "..."
+
+    methods = {
+        "DWT.DWT_GRAY_LL": "DWT.DWT_GRAY_LL_EXTRACT",
+        "DWT.DWT_SVD_GRAY_LL": "DWT.DWT_SVD_GRAY_LL_EXTRACT"
+    }
+    chosen_method = methods.get(method, "wrong method")
+    return chosen_method(im_path, wm_path, im_with_wm_after_attack)
 
 
-# coverImagePath= "..."
-# watermarkImagePath = "..."
-# extractedWatermark
-# switch(Method)
-# case DWT.DWT_GRAY_LL
-#   extractedWatermark= DWT.DWT_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, pathToWatermarkedImageAfterAttack )
-# break
-# case DWT.DWT_SVD_GRAY_LL
-#   extractedWatermark = DWT.DWT_SVD_GRAY_LL_EXTRACT(coverImagePath,watermarkImagePath, pathToWatermarkedImageAfterAttack ) #added _ExTRACT TO METHOD NAME
-# break
-# default ...
-
-# return extractedWatermark
-
-def getExtractedWatermarkNormalWay(coverImagePath, watermarkImagePath, method):
+def get_extracted_watermark_normal_way(coverImagePath, watermarkImagePath, method):
     return
 
 
 # extractedWatermark = runAppropriateImageWatermarkingMethod(coverImagePath,watermarkImagePath, method)
 # return extracted watermark
 
-def runAppropriateImageWatermarkingMethod(method):  # method = DWT.DWT_GRAY_LL
+def run_appropriate_image_watermarking_method(method):  # method = DWT.DWT_GRAY_LL
     return
 
 
@@ -207,7 +201,7 @@ def runAppropriateImageWatermarkingMethod(method):  # method = DWT.DWT_GRAY_LL
 
 # return extractedWatermark
 
-def compareWatermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
+def compare_watermarks(watermarkAfterAttack, watermarkAfterNormalExtraction):
     return
 # psnr(watermarkAfterAttack)
 # psnr(watermarkAfterNormalExtraction)
