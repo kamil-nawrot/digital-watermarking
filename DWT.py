@@ -14,8 +14,6 @@ RGB_WATERMARKING_CONDITION = 0.01
 def DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
     cover_img = read_file(coverImagePath, "RGB")
     watermark_img = read_file(watermarkImagePath, "RGB")
-    # cv2.imshow('orginal image', cover_img)
-    # cv2.imshow('watermark image', watermark_img)
 
     cover_red_dwt_layers, cover_green_dwt_layers, cover_blue_dwt_layers = dwt_rgb_image(cover_img)
 
@@ -35,7 +33,6 @@ def DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
 
     watermarked_img = combine_rgb_channels_to_bgr_img(red_channel, green_channel, blue_channel)
 
-    cv2.imshow('Watermarked Image', watermarked_img.astype(np.uint8))
     cv2.imwrite('' + IMAGES_DIR + 'watermarked_image_DWT_RGB_LL.jpg', watermarked_img)
 
     return watermarked_img
@@ -79,8 +76,6 @@ def dwt_rgb_image(coverImage):
 def DWT_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     cover_img = read_file(coverImagePath, "RGB")
     watermark_img = read_file(watermarkImagePath, "RGB")
-    cv2.imshow('orginal image', cover_img)
-    cv2.imshow('watermark image', watermark_img)
 
     cover_red_dwt_layers, cover_green_dwt_layers, cover_blue_dwt_layers = dwt_rgb_image(cover_img)
 
@@ -102,7 +97,6 @@ def DWT_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
 
     extracted_watermark = combine_rgb_channels_to_bgr_img(red_channel, green_channel, blue_channel)
 
-    cv2.imshow('Extracted watermark', extracted_watermark.astype(np.uint8))
     cv2.imwrite('' + IMAGES_DIR + 'extracted_watermark_DWT_RBG_LL.jpg', extracted_watermark)
 
     return extracted_watermark
@@ -119,8 +113,6 @@ def extract_watermark_from_LL_rgb(cover_red_layers, cover_green_layers, cover_bl
 def DWT_GRAY_LL_EMBED(coverImagePath, watermarkImagePath):
     cover_img = read_file(coverImagePath, "GRAY")
     watermark_img = read_file(watermarkImagePath, "GRAY")
-    cv2.imshow('orginal image', cover_img)
-    cv2.imshow('watermark image', watermark_img)
 
     # DWT on cover image
     cover_ll, (cover_LH, cover_HL, cover_HH) = pywt.dwt2(cover_img, 'haar')
@@ -133,7 +125,6 @@ def DWT_GRAY_LL_EMBED(coverImagePath, watermarkImagePath):
 
     watermarked_img = pywt.idwt2(coeffW, 'haar')
 
-    cv2.imshow('Watermarked Image', watermarked_img)
     cv2.imwrite('' + IMAGES_DIR + 'Watermarked Image_DWT_GRAY_LL.jpg', watermarked_img)
 
     return watermarked_img
@@ -142,8 +133,6 @@ def DWT_GRAY_LL_EMBED(coverImagePath, watermarkImagePath):
 def DWT_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     cover_img = read_file(coverImagePath, "GRAY")
     watermark_img = read_file(watermarkImagePath, "GRAY")
-    cv2.imshow('orginal image', cover_img)
-    cv2.imshow('watermark image', watermark_img)
 
     cover_LL, (cover_LH, cover_HL, cover_HH) = pywt.dwt2(cover_img, 'haar')
     watermark_LL, (watermark_LH, watermark_HL, watermark_HH) = pywt.dwt2(watermark_img, 'haar')
@@ -151,7 +140,6 @@ def DWT_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
 
     extracted_watermark = extract_gray_watermark(cover_LL, watermark_LH, watermark_HL, watermark_HH, watermarked_LL)
 
-    cv2.imshow('Extracted', extracted_watermark)
     cv2.imwrite('' + IMAGES_DIR + 'extracted_watermark_DWT_GRAY_LL.jpg', extracted_watermark)
 
     return extracted_watermark

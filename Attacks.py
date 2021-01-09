@@ -8,12 +8,10 @@ from skimage.util import random_noise
 
 
 # cv2.imread(...)
-def check_psnr(original, extracted_path):
-    extraccted_im = cv2.imread(extracted_path)
-    psnr = cv2.PSNR(original, extraccted_im)
-    print(psnr)
+def check_psnr(wm, wm_ext_path):
+    wm_ext = cv2.imread(wm_ext_path)
+    psnr = cv2.PSNR(wm, wm_ext)
     return psnr
-
 
 # cv2.imread(...)
 def rotate_image(im, angle):
@@ -46,8 +44,6 @@ def resize_attack(im, scale_percent):
     return cv2.resize(im, dim, interpolation=cv2.INTER_AREA)
 
 
-######################## works only with Image.open()
-
 # Image.open(...)
 def compression(im, quality):
     print('attack compression')
@@ -66,20 +62,17 @@ def gaussian_noise(filename):
     # can parametrize: clip, mean, var
     noise_img = random_noise(im_arr, mode='gaussian')
     noise_img = (255 * noise_img).astype(np.uint8)
-    img = Image.fromarray(noise_img)  # remove ONLY if it works with Kamil's idea
     return noise_img
 
 
 # Image.open(...)
 def salt_pepper(filename):
-    print(filename)
-    img = Image.open(filename)
     print('attack salt pepper')
+    img = Image.open(filename)
     im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
     noise_img = random_noise(im_arr, mode='s&p')
     noise_img = (255 * noise_img).astype(np.uint8)
-    Image.fromarray(noise_img).show()
     return noise_img
 
 

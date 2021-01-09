@@ -8,30 +8,32 @@ import DWT_SVD
 
 logging.basicConfig(level=logging.DEBUG)
 
-original_im_path = 'images/mandrill_512.jpg'
-original_wm_path = 'images/lenna_512.jpg'
+im_path = 'images/mandrill_512.jpg'
+wm_path = 'images/lenna_512.jpg'
 
-original_im = cv2.imread(original_im_path)
-original_wm = cv2.imread(original_wm_path)
+im = cv2.imread(im_path)
+wm = cv2.imread(wm_path)
 
+
+# use: im, im_wm, im_wm_atk, wm, wm_ext
 
 # ______________________________________________________
 def test_DWT_SVD_RGB_LL():
-    image_with_watermark = DWT_SVD.DWT_SVD_RGB_LL_EMBED(original_im_path, original_wm_path)
+    image_with_watermark = DWT_SVD.DWT_SVD_RGB_LL_EMBED(im_path, wm_path)
 
-    psnrs_method1 = []
+    psnrs = []
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
-    for atck_im in attacked_images:
-        extracted_wm_path = DWT_SVD.DWT_SVD_RGB_LL_EXTRACT(original_im_path, original_wm_path, atck_im)
-        psnrs_method1.append(Attacks.check_psnr(original_wm, extracted_wm_path))
+    for im_wm_atk in attacked_images:
+        extracted_wm_path = DWT_SVD.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm_atk)
+        psnr = Attacks.check_psnr(wm, extracted_wm_path)
+        psnrs.append(psnr)
+    print(psnrs)
 
 
 # ______________________________________________________
 def test_DWT_SVD_RGB_HL():
     image_with_watermark = DWT_SVD.DWT_SVD_RGB_HL_EMBED(original_im_path, original_wm_path)
-    # print(image_with_watermark)
-    # cv2.imshow('Extracted Watermark', np.uint8(image_with_watermark))
     psnrs_method1 = []
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
