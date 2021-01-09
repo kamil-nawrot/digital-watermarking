@@ -9,7 +9,7 @@ from skimage.color import rgb2gray
 
 IMAGES_DIR = "processed_images\\"
 
-def DWT_SVD_RGB_LL(coverImagePath,watermarkImagePath):
+def DWT_SVD_RGB_LL_EMBED(coverImagePath,watermarkImagePath):
     coverImage = readFile(coverImagePath,"RGB")
     watermarkImage = readFile(watermarkImagePath,"RGB")
 
@@ -235,7 +235,7 @@ def DWT_SVD_RGB_LL_EXTRACT(coverImagePath,watermarkImagePath, watermarked_img):
     cv2.imwrite(IMAGES_DIR + 'extracted_watermark_DWT_SVD_RGB_LL.jpg', extracted_watermark )
     return extracted_watermark
 
-def DWT_SVD_RGB_HL(coverImagePath,watermarkImagePath):
+def DWT_SVD_RGB_HL_EMBED(coverImagePath,watermarkImagePath):
 
     coverImage = readFile(coverImagePath, "RGB")
     watermarkImage = readFile(watermarkImagePath, "RGB")
@@ -459,7 +459,7 @@ def DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     cv2.imwrite(IMAGES_DIR + 'extracted_watermark_DWT_SVD_RGB_HL.jpg',extracted_watermark);
 
     return extracted_watermark
-def DWT_SVD_GRAY_LL(coverImagePath,watermarkImagePath):
+def DWT_SVD_GRAY_LL_EMBED(coverImagePath,watermarkImagePath):
 
     coverImage = readFile(coverImagePath, "GRAY")
     watermarkImage = readFile(watermarkImagePath, "GRAY")
@@ -535,7 +535,7 @@ def DWT_SVD_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img)
     cv2.imwrite(IMAGES_DIR + 'extracted_watermark_DWT_SVD_GRAY_LL.jpg',extracted_watermark);
     return extracted_watermark
 
-def DWT_SVD_GRAY_HL(coverImagePath,watermarkImagePath ):
+def DWT_SVD_GRAY_HL_EMBED(coverImagePath,watermarkImagePath ):
 
     coverImage = readFile(coverImagePath, "GRAY")
     watermarkImage = readFile(watermarkImagePath, "GRAY")
@@ -621,18 +621,19 @@ def readFile(path, colourType): # colour type == GRAY or RGB
     else:
         print("failed to read image")
 
-if __name__ == "__main__":
-    coverImagePath = 'images\\mandrill_512.jpg'
-    watermarkImagePath= 'images\\lenna_512.jpg'
-
-    watermarked_img_rgb_hl = DWT_SVD_RGB_HL(coverImagePath, watermarkImagePath)
-    extracted_img_rgb_hl = DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_rgb_hl)
-
-    watermarked_img_rbg_ll = DWT_SVD_RGB_LL(coverImagePath, watermarkImagePath)
-    extracted_img_rbg_ll = DWT_SVD_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_rbg_ll)
-
-    watermarked_img_gray_hl = DWT_SVD_GRAY_HL(coverImagePath, watermarkImagePath)
-    extracted_img_gray_hl = DWT_SVD_GRAY_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_gray_hl)
-
-    watermarked_img_gray_ll = DWT_SVD_GRAY_LL(coverImagePath, watermarkImagePath)
-    extracted_img_gray_ll = DWT_SVD_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_gray_ll)
+# Run all embedding and extraction methods
+# if __name__ == "__main__":
+#     coverImagePath = 'images\\mandrill_512.jpg'
+#     watermarkImagePath= 'images\\lenna_512.jpg'
+#
+#     watermarked_img_rgb_hl = DWT_SVD_RGB_HL_EMBED(coverImagePath, watermarkImagePath)
+#     extracted_img_rgb_hl = DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_rgb_hl)
+#
+#     watermarked_img_rbg_ll = DWT_SVD_RGB_LL_EMBED(coverImagePath, watermarkImagePath)
+#     extracted_img_rbg_ll = DWT_SVD_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_rbg_ll)
+#
+#     watermarked_img_gray_hl = DWT_SVD_GRAY_HL_EMBED(coverImagePath, watermarkImagePath)
+#     extracted_img_gray_hl = DWT_SVD_GRAY_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_gray_hl)
+#
+#     watermarked_img_gray_ll = DWT_SVD_GRAY_LL_EMBED(coverImagePath, watermarkImagePath)
+#     extracted_img_gray_ll = DWT_SVD_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img_gray_ll)
