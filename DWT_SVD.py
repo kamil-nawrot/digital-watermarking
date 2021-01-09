@@ -364,14 +364,13 @@ def DWT_SVD_GRAY_HL_EMBED(coverImagePath, watermarkImagePath):
 
     # dwt on watermark image
     watermark_LL, (watermark_LH, watermark_HL, watermark_HH) = pywt.dwt2(watermarkImage, 'haar')
-    # svd on watermark image LL
+    # svd on watermark image HL
     U_watermark_img, S_watermark_img, V_watermark_img = svd(watermark_HL)
-
+    # Embed watermark
     S_watermarked_HL = S_cover_img + (DWT_SVD_WATERMARKING_CONDITION * S_watermark_img)
-
+    # Reverse SVD
     watermarked_HL = reverse_svd(U_watermark_img, S_watermarked_HL, V_watermark_img)
-
-
+    # Reverse DWT
     watermarked_img = pywt.idwt2((cover_LL, (cover_LH, watermarked_HL, cover_HH)), 'haar')
 
     out_path = IMAGES_DIR + 'watermarked_image_DWT_SVD_GRAY_HL.jpg'
