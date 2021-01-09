@@ -74,7 +74,7 @@ def DWT_SVD_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img)
     # dwt on watermarked image
     watermarked_LL, (watermarked_LH, watermarked_HL, watermarked_HH) = pywt.dwt2(watermarked_img, 'haar')
     # svd on watermarked image
-    U_watermarked_img, S_watermarked_img, V_watermarked_img = svd(watermarked_LL);
+    U_watermarked_img, S_watermarked_img, V_watermarked_img = svd(watermarked_LL)
 
     # Extracting watermark
     S_watermarked_LL = extract_watermark_dwt_svd(S_cover_img, S_watermarked_img)
@@ -84,7 +84,7 @@ def DWT_SVD_GRAY_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img)
     extracted_watermark = pywt.idwt2((watermarked_LL, (watermark_LH, watermark_HL, watermark_HH)), 'haar')
 
     out_path = IMAGES_DIR + 'extracted_watermark_DWT_SVD_GRAY_LL.jpg'
-    cv2.imwrite(out_path, extracted_watermark);
+    cv2.imwrite(out_path, extracted_watermark)
 
     return out_path
 

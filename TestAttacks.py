@@ -3,8 +3,9 @@ import logging
 import cv2
 
 import Attacks
-import DWT
-import DWT_SVD
+import DWT_GRAY
+import DWT_SVD_GRAY
+import DWT_SVD_RGB
 from DWT_DCT import DWTDCT
 
 logging.basicConfig(level=logging.DEBUG)
@@ -20,13 +21,13 @@ wm = cv2.imread(wm_path)
 
 # ______________________________________________________
 def test_DWT_SVD_RGB_LL():
-    image_with_watermark = DWT_SVD.DWT_SVD_RGB_LL_EMBED(im_path, wm_path)
+    image_with_watermark = DWT_SVD_RGB.DWT_SVD_RGB_LL_EMBED(im_path, wm_path)
 
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
     for im_wm_atk in attacked_images:
-        wm_ext = DWT_SVD.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm_atk)
+        wm_ext = DWT_SVD_RGB.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm_atk)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(str(round(psnr, 3)))
     print(" & ".join(psnrs))
@@ -34,13 +35,13 @@ def test_DWT_SVD_RGB_LL():
 
 # ______________________________________________________
 def test_DWT_SVD_RGB_HL():
-    image_with_watermark = DWT_SVD.DWT_SVD_RGB_HL_EMBED(im_path, wm_path)
+    image_with_watermark = DWT_SVD_RGB.DWT_SVD_RGB_HL_EMBED(im_path, wm_path)
 
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
     for atck_im in attacked_images:
-        wm_ext = DWT_SVD.DWT_SVD_RGB_HL_EXTRACT(im_path, wm_path, atck_im)
+        wm_ext = DWT_SVD_RGB.DWT_SVD_RGB_HL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(str(round(psnr, 3)))
     print(" & ".join(psnrs))
@@ -48,13 +49,13 @@ def test_DWT_SVD_RGB_HL():
 
 # ______________________________________________________
 def test_DWT_SVD_GRAY_LL():
-    image_with_watermark = DWT_SVD.DWT_SVD_GRAY_LL_EMBED(im_path, wm_path)
+    image_with_watermark = DWT_SVD_GRAY.DWT_SVD_GRAY_LL_EMBED(im_path, wm_path)
 
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
     for atck_im in attacked_images:
-        wm_ext = DWT_SVD.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
+        wm_ext = DWT_SVD_GRAY.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(str(round(psnr, 3)))
     print(" & ".join(psnrs))
@@ -62,13 +63,13 @@ def test_DWT_SVD_GRAY_LL():
 
 # ______________________________________________________
 def test_DWT_SVD_GRAY_HL():
-    image_with_watermark = DWT_SVD.DWT_SVD_GRAY_HL_EMBED(im_path, wm_path)
+    image_with_watermark = DWT_SVD_GRAY.DWT_SVD_GRAY_HL_EMBED(im_path, wm_path)
 
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
     for atck_im in attacked_images:
-        wm_ext = DWT_SVD.DWT_SVD_GRAY_HL_EXTRACT(im_path, wm_path, atck_im)
+        wm_ext = DWT_SVD_GRAY.DWT_SVD_GRAY_HL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(str(round(psnr, 3)))
     print(" & ".join(psnrs))
@@ -76,13 +77,13 @@ def test_DWT_SVD_GRAY_HL():
 
 # ______________________________________________________
 def test_DWT_GRAY_LL():
-    image_with_watermark = DWT.DWT_GRAY_LL_EMBED(im_path, wm_path)
+    image_with_watermark = DWT_GRAY.DWT_GRAY_LL_EMBED(im_path, wm_path)
 
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
     for atck_im in attacked_images:
-        wm_ext = DWT.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
+        wm_ext = DWT_GRAY.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(str(round(psnr, 3)))
     print(" & ".join(psnrs))
@@ -101,20 +102,12 @@ def test_DWT_DCT():
     reconstructedImage = DWTDCT("watermarked", "watermarked_image.jpg")
     reconstructedImage.extract_watermark('HL', 128)
 
-    image_with_watermark = DWT.DWT_GRAY_LL_EMBED(im_path, wm_path)
 
-    attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
+# test_DWT_GRAY_LL()
+# test_DWT_RGB_LL()
 
-    psnrs = []
-    for atck_im in attacked_images:
-        wm_ext = DWT.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
-        psnrs.append(Attacks.check_psnr(wm, wm_ext))
-    print(" & ".join(psnrs))
-
+test_DWT_SVD_GRAY_LL()
+test_DWT_SVD_GRAY_HL()
 
 test_DWT_SVD_RGB_LL()
 test_DWT_SVD_RGB_HL()
-# test_DWT_SVD_GRAY_LL()
-# test_DWT_SVD_GRAY_HL()
-# test_DWT_GRAY_LL()
-# test_DWT_RGB_LL()
