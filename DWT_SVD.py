@@ -3,7 +3,7 @@ import numpy as np
 import pywt
 
 IMAGES_DIR = "processed_images\\"
-DWT_SVD_WATERMARKING_CONDITION = 0.01
+DWT_SVD_WATERMARKING_CONDITION = 0.1
 
 
 def DWT_SVD_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
