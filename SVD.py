@@ -38,7 +38,7 @@ def SVD_GRAY_LL():
     normalized = cv2.normalize(wimg, watermarkedImage, 1.0, 0.0, cv2.NORM_MINMAX)
     cv2.imshow('Watermarked Image', watermarkedImage)
 
-    # cv2.imshow('Watermarked Image', wimgr)
+    return  watermarkedImage
 
 
 
