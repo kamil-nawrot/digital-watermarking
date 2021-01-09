@@ -15,12 +15,9 @@ def check_psnr(wm, wm_ext_path):
 
 
 # cv2.imread(...)
-def rotate_image(im_path, angle):
+def rotate_image(im_path):
     im = cv2.imread(im_path)
-    row, col, colors = im.shape
-    center = tuple(np.array([row, col]) / 2)
-    rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
-    return cv2.warpAffine(im, rot_mat, (col, row))
+    return cv2.rotate(im, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
 
 # cv2.imread(...)
@@ -70,7 +67,7 @@ def salt_pepper(im_path):
     img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
-    noise_img = random_noise(im_arr, mode='s&p', amount=0.5, salt_vs_pepper=0.5)
+    noise_img = random_noise(im_arr, mode='s&p', amount=0.3, salt_vs_pepper=0.5)
     noise_img = (255 * noise_img).astype(np.uint8)
     return noise_img
 
@@ -82,12 +79,12 @@ def perform_all_attacks_on_watermarked_image(im_wm_path):
     cv2.imwrite("attacks/sp_" + str(ts) + ".jpg", result_salt_pepper)
 
     result_gaussian = gaussian_noise(im_wm_path)
-    cv2.imwrite("attacks/gn_" + str(ts) + ".jpg", result_salt_pepper)
+    cv2.imwrite("attacks/gn_" + str(ts) + ".jpg", result_gaussian)
 
-    result_compression = compression(im_wm_path, 25)
+    result_compression = compression(im_wm_path, 20)
 
-    result_rotate = rotate_image(im_wm_path, 90)
-    cv2.imwrite("attacks/rot_" + str(ts) + ".jpg", result_salt_pepper)
+    result_rotate = rotate_image(im_wm_path)
+    cv2.imwrite("attacks/rot_" + str(ts) + ".jpg", result_rotate)
 
     # result_resize = resize_attack(im_wm_path, 200)
     # result_distortion = distorition(im_wm_path)
