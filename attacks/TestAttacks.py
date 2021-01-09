@@ -1,30 +1,32 @@
-import cv2
-import numpy as np
-import pywt
-import attacks.Attacks as attacks
 import logging
-import PIL
-import DWT as dwt
+
+import attacks.Attacks as attacks
+
 logging.basicConfig(level=logging.DEBUG)
 
-coverImagePath = 'images\\mandrill_512.jpg'
-watermarkImagePath = 'images\\lenna_512.jpg'
+original_im_path = 'images\\mandrill_512.jpg'
+original_wm_path = 'images\\lenna_512.jpg'
+
+original_im = []
+original_wm = []
+images_with_watermarks = []  # create_images_with_watermarks(filename)
 
 
-dwt.DWT_RGB_LL(coverImagePath, watermarkImagePath, "rotate_image", 90)
-dwt.DWT_RGB_LL(coverImagePath, watermarkImagePath, "distortion")
-dwt.DWT_RGB_LL(coverImagePath, watermarkImagePath, "resize_attack", 200)
+def perform_attacks_for_single_image(im):
+    attacked_images = attacks.perform_all_attacks_on_watermarked_image(im)
+    psnrs = []
+    for atck_im in attacked_images:
+        extracted_wm = extract_watermark(atck_im)
+        psnrs.append(attacks.check_psnr(original_wm, extracted_wm))
+    return psnrs
 
-    # Image.open
-dwt.DWT_RGB_LL(coverImagePath, watermarkImagePath, "compression", 1)
-dwt.DWT_RGB_LL(coverImagePath, watermarkImagePath, "gaussian_noise")
-dwt.DWT_RGB_LLoptions(coverImagePath, watermarkImagePath, "salt_and_pepper", 0.3, 100)
 
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "rotate_image", 90)
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "distortion")
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "resize_attack", 200)
-    # Image.open
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "compression", 1)
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "gaussian_noise")
-dwt.DWT_GRAY_LL(coverImagePath, watermarkImagePath, "salt_and_pepper", 0.3, 100)
+# method 1
+image_with_watermark = []
+psnrs_method1 = perform_attacks_for_single_image(image_with_watermark)
 
+# method 2
+
+# method 3
+
+# method ...
