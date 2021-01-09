@@ -13,6 +13,7 @@ def check_psnr(wm, wm_ext_path):
     psnr = cv2.PSNR(wm, wm_ext)
     return psnr
 
+
 # cv2.imread(...)
 def rotate_image(im, angle):
     print('attack rotate')
@@ -45,19 +46,20 @@ def resize_attack(im, scale_percent):
 
 
 # Image.open(...)
-def compression(im, quality):
+def compression(im_path, quality):
     print('attack compression')
+    img = Image.open(im_path)
     # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
     ts = calendar.timegm(time.gmtime())
-    path = "../attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + ".jpg"
-    im.save(path, optimize=True, quality=quality)
+    path = "attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + ".jpg"
+    img.save(path, optimize=True, quality=quality)
     return cv2.imread(path)
 
 
 # Image.open(...)
-def gaussian_noise(filename):
+def gaussian_noise(im_path):
     print('attack gaussian')
-    img = Image.open(filename)
+    img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize: clip, mean, var
     noise_img = random_noise(im_arr, mode='gaussian')
@@ -66,21 +68,21 @@ def gaussian_noise(filename):
 
 
 # Image.open(...)
-def salt_pepper(filename):
+def salt_pepper(im_path):
     print('attack salt pepper')
-    img = Image.open(filename)
+    img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
-    noise_img = random_noise(im_arr, mode='s&p')
+    noise_img = random_noise(im_arr, mode='s&p', amount=0.5, salt_vs_pepper=0.5)
     noise_img = (255 * noise_img).astype(np.uint8)
     return noise_img
 
 
-def perform_all_attacks_on_watermarked_image(im_wm):
-    result_salt_pepper = salt_pepper(im_wm)
-    result_gaussian = gaussian_noise(im_wm)
+def perform_all_attacks_on_watermarked_image(im_wm_path):
+    result_salt_pepper = salt_pepper(im_wm_path)
+    result_gaussian = gaussian_noise(im_wm_path)
+    result_compression = compression(im_wm_path, 25)
     # result_resize = resize_attack(im_wm, 2)
-    # result_compression = compression(im_wm, 25)
     # result_rotate = rotate_image(im_wm, 90)
     # result_distortion = distorition(im_wm)
-    return [result_salt_pepper, result_gaussian]
+    return [result_salt_pepper, result_gaussian, result_compression]
