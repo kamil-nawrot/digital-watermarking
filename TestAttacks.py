@@ -84,7 +84,7 @@ def test_DWT_GRAY_LL():
 
 
 test_DWT_SVD_RGB_LL()
-# test_DWT_SVD_RGB_HL()
+test_DWT_SVD_RGB_HL()
 # test_DWT_SVD_GRAY_LL()
 # test_DWT_SVD_GRAY_HL()
 # test_DWT_GRAY_LL()

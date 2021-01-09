@@ -15,8 +15,8 @@ def check_psnr(wm, wm_ext_path):
 
 
 # cv2.imread(...)
-def rotate_image(im, angle):
-    print('attack rotate')
+def rotate_image(im_path, angle):
+    im = cv2.imread(im_path)
     row, col, colors = im.shape
     center = tuple(np.array([row, col]) / 2)
     rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
@@ -24,9 +24,9 @@ def rotate_image(im, angle):
 
 
 # cv2.imread(...)
-def distorition(im):
-    print('attack distorition')
-    color_img = im
+def distorition(im_path):
+    img = cv2.imread(im_path)
+    color_img = img
     img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
     A = img.shape[0] / 3.0
     w = 2.0 / img.shape[1]
@@ -37,8 +37,8 @@ def distorition(im):
 
 
 # cv.imread(...)
-def resize_attack(im, scale_percent):
-    print('attack resize')
+def resize_attack(im_path, scale_percent):
+    im = cv2.imread(im_path)
     width = int(im.shape[1] * scale_percent / 100)
     height = int(im.shape[0] * scale_percent / 100)
     dim = (width, height)
@@ -47,18 +47,16 @@ def resize_attack(im, scale_percent):
 
 # Image.open(...)
 def compression(im_path, quality):
-    print('attack compression')
     img = Image.open(im_path)
     # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
     ts = calendar.timegm(time.gmtime())
-    path = "attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + ".jpg"
+    path = "attacks/cmprs_" + str(quality) + "_" + str(ts) + ".jpg"
     img.save(path, optimize=True, quality=quality)
     return cv2.imread(path)
 
 
 # Image.open(...)
 def gaussian_noise(im_path):
-    print('attack gaussian')
     img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize: clip, mean, var
@@ -69,7 +67,6 @@ def gaussian_noise(im_path):
 
 # Image.open(...)
 def salt_pepper(im_path):
-    print('attack salt pepper')
     img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
@@ -79,10 +76,19 @@ def salt_pepper(im_path):
 
 
 def perform_all_attacks_on_watermarked_image(im_wm_path):
+    ts = calendar.timegm(time.gmtime())
+
     result_salt_pepper = salt_pepper(im_wm_path)
+    cv2.imwrite("attacks/sp_" + str(ts) + ".jpg", result_salt_pepper)
+
     result_gaussian = gaussian_noise(im_wm_path)
+    cv2.imwrite("attacks/gn_" + str(ts) + ".jpg", result_salt_pepper)
+
     result_compression = compression(im_wm_path, 25)
-    # result_resize = resize_attack(im_wm, 2)
-    # result_rotate = rotate_image(im_wm, 90)
-    # result_distortion = distorition(im_wm)
-    return [result_salt_pepper, result_gaussian, result_compression]
+
+    result_rotate = rotate_image(im_wm_path, 90)
+    cv2.imwrite("attacks/rot_" + str(ts) + ".jpg", result_salt_pepper)
+
+    # result_resize = resize_attack(im_wm_path, 200)
+    # result_distortion = distorition(im_wm_path)
+    return [result_salt_pepper, result_gaussian, result_compression, result_rotate]
