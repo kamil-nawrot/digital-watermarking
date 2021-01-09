@@ -28,20 +28,20 @@ def grayMenu():
         if transformationVal != 3 and transformationVal != 4:
             transformationOptions[transformationVal](coverImagePathDwtSvd,watermarkImagePathDwtSvd)
         elif transformationVal == 3:
-            baseImage = DWT_DCT.Image("base", coverImagePathDctDwt, (1024, 1024),0)
-            watermarkImage = DWT_DCT.Image("watermark", watermarkImagePathDctDwt, (128, 128),0)
+            baseImage = DWT_DCT.DWTDCT("base", coverImagePathDctDwt, (1024, 1024), 0)
+            watermarkImage = DWT_DCT.DWTDCT("watermark", watermarkImagePathDctDwt, (128, 128), 0)
             baseImage.embed_watermark('LL', watermarkImage)
             baseImage.display()
             baseImage.save('watermarked_image_DCT_DWT_GRAY_LL.jpg')
-            reconstructedImage = DWT_DCT.Image("watermarked", "watermarked_image_DCT_DWT_GRAY_LL.jpg")
+            reconstructedImage = DWT_DCT.DWTDCT("watermarked", "watermarked_image_DCT_DWT_GRAY_LL.jpg")
             reconstructedImage.extract_watermark('LL', 128)
         elif transformationVal == 4:
-            baseImage = DWT_DCT.Image("base", "images/lenna_256.jpg", (1024, 1024), 0)
-            watermarkImage = DWT_DCT.Image("watermark", "images/mandrill_256.jpg", (128, 128), 0)
+            baseImage = DWT_DCT.DWTDCT("base", "images/lenna_256.jpg", (1024, 1024), 0)
+            watermarkImage = DWT_DCT.DWTDCT("watermark", "images/mandrill_256.jpg", (128, 128), 0)
             baseImage.embed_watermark('HL', watermarkImage)
             baseImage.display()
             baseImage.save('watermarked_image_DCT_DWT_GRAY_HL.jpg')
-            reconstructedImage = DWT_DCT.Image("watermarked", "watermarked_image_DCT_DWT_GRAY_HL.jpg")
+            reconstructedImage = DWT_DCT.DWTDCT("watermarked", "watermarked_image_DCT_DWT_GRAY_HL.jpg")
             reconstructedImage.extract_watermark('HL', 128)
 
 
@@ -71,20 +71,20 @@ def rgbMenu():
             # DWT param
             transformationOptions[transformationVal](coverImagePathDwtSvd,watermarkImagePathDwtSvd,"")
         elif transformationVal == 3:
-            baseImage = DWT_DCT.Image("base", coverImagePathDctDwt, (1024, 1024),8)
-            watermarkImage = DWT_DCT.Image("watermark", watermarkImagePathDctDwt, (128, 128),8)
+            baseImage = DWT_DCT.DWTDCT("base", coverImagePathDctDwt, (1024, 1024), 8)
+            watermarkImage = DWT_DCT.DWTDCT("watermark", watermarkImagePathDctDwt, (128, 128), 8)
             baseImage.embed_watermark('LL', watermarkImage)
             baseImage.display()
             baseImage.save('watermarked_image_DCT_DWT_RGB_LL.jpg')
-            reconstructedImage = DWT_DCT.Image("watermarked", "watermarked_image_DCT_DWT_RGB_LL.jpg")
+            reconstructedImage = DWT_DCT.DWTDCT("watermarked", "watermarked_image_DCT_DWT_RGB_LL.jpg")
             reconstructedImage.extract_watermark('LL', 128)
         elif transformationVal == 4:
-            baseImage = DWT_DCT.Image("base", "images/lenna_256.jpg", (1024, 1024), 8)
-            watermarkImage = DWT_DCT.Image("watermark", "images/mandrill_256.jpg", (128, 128), 8)
+            baseImage = DWT_DCT.DWTDCT("base", "images/lenna_256.jpg", (1024, 1024), 8)
+            watermarkImage = DWT_DCT.DWTDCT("watermark", "images/mandrill_256.jpg", (128, 128), 8)
             baseImage.embed_watermark('HL', watermarkImage)
             baseImage.display()
             baseImage.save('watermarked_image_DCT_DWT_RGB_HL.jpg')
-            reconstructedImage = DWT_DCT.Image("watermarked", "watermarked_image_DCT_DWT_RGB_HL.jpg")
+            reconstructedImage = DWT_DCT.DWTDCT("watermarked", "watermarked_image_DCT_DWT_RGB_HL.jpg")
             reconstructedImage.extract_watermark('HL', 128)
     elif processOptions[processOrAttack] == "attack":
         transformationName = getTransformName(transformationVal, "RGB")

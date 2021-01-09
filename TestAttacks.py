@@ -5,6 +5,7 @@ import cv2
 import Attacks
 import DWT
 import DWT_SVD
+from DWT_DCT import DWTDCT
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,8 +28,8 @@ def test_DWT_SVD_RGB_LL():
     for im_wm_atk in attacked_images:
         wm_ext = DWT_SVD.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm_atk)
         psnr = Attacks.check_psnr(wm, wm_ext)
-        psnrs.append(psnr)
-    print(psnrs)
+        psnrs.append(str(round(psnr, 3)))
+    print(" & ".join(psnrs))
 
 
 # ______________________________________________________
@@ -40,8 +41,9 @@ def test_DWT_SVD_RGB_HL():
     psnrs = []
     for atck_im in attacked_images:
         wm_ext = DWT_SVD.DWT_SVD_RGB_HL_EXTRACT(im_path, wm_path, atck_im)
-        psnrs.append(Attacks.check_psnr(wm, wm_ext))
-    print(psnrs)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(str(round(psnr, 3)))
+    print(" & ".join(psnrs))
 
 
 # ______________________________________________________
@@ -53,8 +55,9 @@ def test_DWT_SVD_GRAY_LL():
     psnrs = []
     for atck_im in attacked_images:
         wm_ext = DWT_SVD.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
-        psnrs.append(Attacks.check_psnr(wm, wm_ext))
-    print(psnrs)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(str(round(psnr, 3)))
+    print(" & ".join(psnrs))
 
 
 # ______________________________________________________
@@ -66,8 +69,9 @@ def test_DWT_SVD_GRAY_HL():
     psnrs = []
     for atck_im in attacked_images:
         wm_ext = DWT_SVD.DWT_SVD_GRAY_HL_EXTRACT(im_path, wm_path, atck_im)
-        psnrs.append(Attacks.check_psnr(wm, wm_ext))
-    print(psnrs)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(str(round(psnr, 3)))
+    print(" & ".join(psnrs))
 
 
 # ______________________________________________________
@@ -79,8 +83,33 @@ def test_DWT_GRAY_LL():
     psnrs = []
     for atck_im in attacked_images:
         wm_ext = DWT.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(str(round(psnr, 3)))
+    print(" & ".join(psnrs))
+
+
+def test_DWT_DCT():
+    baseImage = DWTDCT("base", "images/lenna_256.jpg", (1024, 1024))
+    originalImage = DWTDCT("base", "images/lenna_256.jpg", (1024, 1024))
+    watermarkImage = DWTDCT("watermark", "images/mandrill_256.jpg", (128, 128))
+
+    baseImage.embed_watermark('HL', watermarkImage)
+    baseImage.display()
+    baseImage.display_difference(originalImage)
+    baseImage.save('processed_images/watermarked_image.jpg')
+
+    reconstructedImage = DWTDCT("watermarked", "watermarked_image.jpg")
+    reconstructedImage.extract_watermark('HL', 128)
+
+    image_with_watermark = DWT.DWT_GRAY_LL_EMBED(im_path, wm_path)
+
+    attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
+
+    psnrs = []
+    for atck_im in attacked_images:
+        wm_ext = DWT.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
         psnrs.append(Attacks.check_psnr(wm, wm_ext))
-    print(psnrs)
+    print(" & ".join(psnrs))
 
 
 test_DWT_SVD_RGB_LL()
@@ -88,3 +117,4 @@ test_DWT_SVD_RGB_HL()
 # test_DWT_SVD_GRAY_LL()
 # test_DWT_SVD_GRAY_HL()
 # test_DWT_GRAY_LL()
+# test_DWT_RGB_LL()

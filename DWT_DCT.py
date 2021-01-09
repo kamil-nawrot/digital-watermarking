@@ -1,9 +1,9 @@
-import numpy as np
 import cv2
-import math
+import numpy as np
 import pywt
 
-class Image:
+
+class DWTDCT:
     def __init__(self, name, path, dim=None, mode=8):
         self.name = name
         img = cv2.imread(path, mode)
@@ -29,7 +29,7 @@ class Image:
 
 
     def display_difference(self, referenceImage):
-        if isinstance(referenceImage, Image):
+        if isinstance(referenceImage, DWTDCT):
             cv2.imshow('Difference', self.img - referenceImage.img)
             cv2.waitKey(0)
             return
