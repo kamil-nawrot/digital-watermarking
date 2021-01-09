@@ -59,9 +59,10 @@ def compression(im, quality):
 
 
 # Image.open(...)
-def gaussian_noise(im):
+def gaussian_noise(filename):
     print('attack gaussian')
-    im_arr = np.asarray(im)
+    img = Image.open(filename)
+    im_arr = np.asarray(img)
     # can parametrize: clip, mean, var
     noise_img = random_noise(im_arr, mode='gaussian')
     noise_img = (255 * noise_img).astype(np.uint8)
@@ -84,9 +85,9 @@ def salt_pepper(filename):
 
 def perform_all_attacks_on_watermarked_image(im_wm):
     result_salt_pepper = salt_pepper(im_wm)
-    # result_gaussian = gaussian_noise(im_wm)
+    result_gaussian = gaussian_noise(im_wm)
     # result_resize = resize_attack(im_wm, 2)
     # result_compression = compression(im_wm, 25)
     # result_rotate = rotate_image(im_wm, 90)
     # result_distortion = distorition(im_wm)
-    return [result_salt_pepper]
+    return [result_salt_pepper, result_gaussian]
