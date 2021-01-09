@@ -1,13 +1,11 @@
-import cv2
-import numpy as np
-
-import SVD as SVD
-import DWT_SVD as DWT_SVD
-import DWT as DWT
-import DWT_DCT as DWT_DCT
 import sys
 
-from attacks import Attacks as Attacks
+import cv2
+
+import Attacks as Attacks
+import DWT as DWT
+import DWT_DCT as DWT_DCT
+import DWT_SVD as DWT_SVD
 
 
 def compression(quality):

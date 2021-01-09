@@ -1,7 +1,8 @@
+import logging
+
 import cv2
 import numpy as np
 import pywt
-import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -13,8 +14,8 @@ RGB_WATERMARKING_CONDITION = 0.01
 def DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
     cover_img = read_file(coverImagePath, "RGB")
     watermark_img = read_file(watermarkImagePath, "RGB")
-    cv2.imshow('orginal image', cover_img)
-    cv2.imshow('watermark image', watermark_img)
+    # cv2.imshow('orginal image', cover_img)
+    # cv2.imshow('watermark image', watermark_img)
 
     cover_red_dwt_layers, cover_green_dwt_layers, cover_blue_dwt_layers = dwt_rgb_image(cover_img)
 

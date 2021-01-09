@@ -8,13 +8,16 @@ from skimage.util import random_noise
 
 
 # cv2.imread(...)
-def check_psnr(original, attacked):
-    print(cv2.PSNR(original, attacked))
-    return cv2.PSNR(original, attacked)
+def check_psnr(original, extracted_path):
+    extraccted_im = cv2.imread(extracted_path)
+    psnr = cv2.PSNR(original, extraccted_im)
+    print(psnr)
+    return psnr
 
 
 # cv2.imread(...)
 def rotate_image(im, angle):
+    print('attack rotate')
     row, col, colors = im.shape
     center = tuple(np.array([row, col]) / 2)
     rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
@@ -23,6 +26,7 @@ def rotate_image(im, angle):
 
 # cv2.imread(...)
 def distorition(im):
+    print('attack distorition')
     color_img = im
     img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
     A = img.shape[0] / 3.0
@@ -35,6 +39,7 @@ def distorition(im):
 
 # cv.imread(...)
 def resize_attack(im, scale_percent):
+    print('attack resize')
     width = int(im.shape[1] * scale_percent / 100)
     height = int(im.shape[0] * scale_percent / 100)
     dim = (width, height)
@@ -45,6 +50,7 @@ def resize_attack(im, scale_percent):
 
 # Image.open(...)
 def compression(im, quality):
+    print('attack compression')
     # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
     ts = calendar.timegm(time.gmtime())
     path = "../attacks/compressed/Compressed_" + str(quality) + "_" + str(ts) + ".jpg"
@@ -54,6 +60,7 @@ def compression(im, quality):
 
 # Image.open(...)
 def gaussian_noise(im):
+    print('attack gaussian')
     im_arr = np.asarray(im)
     # can parametrize: clip, mean, var
     noise_img = random_noise(im_arr, mode='gaussian')
@@ -63,20 +70,23 @@ def gaussian_noise(im):
 
 
 # Image.open(...)
-def salt_pepper(im, amount, ratio):
-    im_arr = np.asarray(im)
+def salt_pepper(filename):
+    print(filename)
+    img = Image.open(filename)
+    print('attack salt pepper')
+    im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
-    noise_img = random_noise(im_arr, mode='s&p', amount=amount, salt_vs_pepper=ratio)
+    noise_img = random_noise(im_arr, mode='s&p')
     noise_img = (255 * noise_img).astype(np.uint8)
-    # Image.fromarray(noise_img).show()
+    Image.fromarray(noise_img).show()
     return noise_img
 
 
-def perform_all_attacks_on_watermarked_image(im_wm):  # method = DWT.DWT_GRAY_LL
-    result_salt_pepper = salt_pepper(im_wm, 0.1, 0.5)
-    result_gaussian = gaussian_noise(im_wm)
-    result_resize = resize_attack(im_wm, 2)
-    result_compression = compression(im_wm, 25)
-    result_rotate = rotate_image(im_wm, 90)
+def perform_all_attacks_on_watermarked_image(im_wm):
+    result_salt_pepper = salt_pepper(im_wm)
+    # result_gaussian = gaussian_noise(im_wm)
+    # result_resize = resize_attack(im_wm, 2)
+    # result_compression = compression(im_wm, 25)
+    # result_rotate = rotate_image(im_wm, 90)
     # result_distortion = distorition(im_wm)
-    return [result_salt_pepper, result_gaussian, result_resize, result_compression, result_rotate]
+    return [result_salt_pepper]
