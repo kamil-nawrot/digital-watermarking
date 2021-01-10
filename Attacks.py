@@ -16,6 +16,7 @@ def check_psnr(wm, wm_ext_path):
 
 # cv2.imread(...)
 def rotate_image(im_path):
+    print("rotation")
     im = cv2.imread(im_path)
     return cv2.rotate(im, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
@@ -44,6 +45,7 @@ def resize_attack(im_path, scale_percent):
 
 # Image.open(...)
 def compression(im_path, quality):
+    print("compression")
     img = Image.open(im_path)
     # https://sempioneer.com/python-for-seo/how-to-compress-images-in-python/
     ts = calendar.timegm(time.gmtime())
@@ -54,6 +56,7 @@ def compression(im_path, quality):
 
 # Image.open(...)
 def gaussian_noise(im_path):
+    print("gaussian")
     img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize: clip, mean, var
@@ -64,6 +67,7 @@ def gaussian_noise(im_path):
 
 # Image.open(...)
 def salt_pepper(im_path):
+    print("salt pepper")
     img = Image.open(im_path)
     im_arr = np.asarray(img)
     # can parametrize amount <0, 1> and salt_vs_pepper  <0, 1>
@@ -88,4 +92,4 @@ def perform_all_attacks_on_watermarked_image(im_wm_path):
 
     # result_resize = resize_attack(im_wm_path, 200)
     # result_distortion = distorition(im_wm_path)
-    return [result_salt_pepper, result_gaussian, result_compression, result_rotate]
+    return [result_salt_pepper, result_gaussian, result_compression, ]
