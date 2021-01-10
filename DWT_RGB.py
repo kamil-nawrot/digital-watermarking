@@ -6,7 +6,7 @@ import pywt
 logging.basicConfig(level=logging.DEBUG)
 
 IMAGES_DIR = "processed_images\\"
-RGB_WATERMARKING_CONDITION = 0.01
+RGB_WATERMARKING_CONDITION = 0.10
 
 
 def DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
@@ -198,8 +198,8 @@ if __name__ == "__main__":
     coverImagePath = 'images\\mandrill_512.jpg'
     watermarkImagePath = 'images\\lenna_512.jpg'
 
-    # watermarked_img_rbg = DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath)
-    # extracted_img_rbg = DWT_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, read_file(watermarked_img_rbg, "RGB"))
+    watermarked_img_rbg = DWT_RGB_LL_EMBED(coverImagePath, watermarkImagePath)
+    extracted_img_rbg = DWT_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, read_file(watermarked_img_rbg, "RGB"))
 
-    # watermarked_img_rbg = DWT_RGB_HL_EMBED(coverImagePath, watermarkImagePath)
-    # extracted_img_rbg = DWT_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, read_file(watermarked_img_rbg, "RGB"))
+    watermarked_img_rbg = DWT_RGB_HL_EMBED(coverImagePath, watermarkImagePath)
+    extracted_img_rbg = DWT_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, read_file(watermarked_img_rbg, "RGB"))
