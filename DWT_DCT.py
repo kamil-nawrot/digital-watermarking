@@ -86,6 +86,9 @@ class DWTDCT:
         self.calculate_coefficients()
         self.apply_dct(dwtSet)
         vectors = list(map(lambda c: np.ravel(c), watermarkImage.channels))
+        for v in range(len(self.channels)):
+            vectors[v] = np.interp(vectors[v], (0, 1), (0, 0.2))
+
         for c in range(len(self.channels)):
             i = 0
             coeffSubset = self.coeffs[c][self.subset]
@@ -132,7 +135,9 @@ class DWTDCT:
                         block = coeffSubset[r:r+4, p:p+4]
                         watermarkChannel.append(block[2][2])
                         i += 1
+            watermarkChannel = np.interp(watermarkChannel, (0, 0.2), (0, 1))
             watermark.append(watermarkChannel)
+
         watermark = np.reshape(watermark, (len(self.channels), watermarkSize, watermarkSize,))
         watermark = cv2.merge(watermark)
         cv2.imshow("Extracted Watermark", watermark)
@@ -141,14 +146,11 @@ class DWTDCT:
         return
 
 
-# baseImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
-# originalImage = Image("base", "images/lenna_256.jpg", (1024, 1024))
-# watermarkImage = Image("watermark", "images/mandrill_256.jpg", (128, 128))
-#
+# baseImage = DWTDCT("base", "images/lenna_256.jpg", (1024, 1024))
+# watermarkImage = DWTDCT("watermark", "images/mandrill_256.jpg", (128, 128))
+
 # baseImage.embed_watermark('HL', watermarkImage)
-# baseImage.display()
-# baseImage.display_difference(originalImage)
 # baseImage.save('watermarked_image.jpg')
-#
-# reconstructedImage = Image("watermarked", "watermarked_image.jpg")
+
+# reconstructedImage = DWTDCT("watermarked", "watermarked_image.jpg")
 # reconstructedImage.extract_watermark('HL', 128)
