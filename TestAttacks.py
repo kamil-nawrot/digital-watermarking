@@ -7,6 +7,8 @@ import DWT_GRAY
 import DWT_RGB
 import DWT_SVD_GRAY
 import DWT_SVD_RGB
+import SVD_GRAY
+import SVD_RGB
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -88,7 +90,6 @@ def test_DWT_RGB_LL():
     print_latex_format(psnrs)
 
 
-# ________________ DWT-SVD
 # ______________________________________________________
 def test_DWT_RGB_HL():
     print("dwt RGB HL")
@@ -104,6 +105,40 @@ def test_DWT_RGB_HL():
     print_latex_format(psnrs)
 
 
+# ________________ SVD
+# ______________________________________________________
+def test_SVD_GRAY():
+    print("SVD GRAY")
+    image_with_watermark = SVD_GRAY.SVD_GRAY_EMBED(im_path, wm_path)
+
+    attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
+
+    psnrs = []
+    for atck_im in attacked_images:
+        if len(atck_im.shape) > 2:
+            atck_im = cv2.cvtColor(atck_im, cv2.COLOR_BGR2GRAY)
+        wm_ext = SVD_GRAY.SVD_GRAY_EXTRACT(im_path, wm_path, atck_im)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(convert_psnr_to_latex(psnr))
+    print_latex_format(psnrs)
+
+
+# ______________________________________________________
+def test_SVD_RGB():
+    print("SVD RGB")
+    image_with_watermark = SVD_RGB.SVD_RGB_EMBED(im_path, wm_path)
+
+    attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
+
+    psnrs = []
+    for atck_im in attacked_images:
+        wm_ext = SVD_RGB.SVD_RGB_EXTRACT(im_path, wm_path, atck_im)
+        psnr = Attacks.check_psnr(wm, wm_ext)
+        psnrs.append(convert_psnr_to_latex(psnr))
+    print_latex_format(psnrs)
+
+
+# ________________ DWT-SVD
 # ______________________________________________________
 def test_DWT_SVD_GRAY_LL():
     print("dwt svd gray LL")
@@ -177,6 +212,10 @@ base_psnr_for_attacked()
 # test_DWT_GRAY_HL()
 # test_DWT_RGB_LL()
 # test_DWT_RGB_HL()
+
+# ______ SVD
+test_SVD_GRAY()
+test_SVD_RGB()
 
 # ______ DWT-SVD
 # test_DWT_SVD_GRAY_LL()
