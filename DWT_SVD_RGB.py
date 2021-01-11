@@ -11,14 +11,14 @@ def DWT_SVD_RGB_LL_EMBED(coverImagePath, watermarkImagePath):
     watermark_img = read_file(watermarkImagePath, "RGB")
 
     # DWT on cover image
-    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb_image(cover_img)
+    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb(cover_img)
     # SVD on cover image
     U_cover_red_channel, S_cover_red_channel, V_cover_red_channel = svd(cover_red_dwt_subbands[0])
     U_cover_green_channel, S_cover_green_channel, V_cover_green_channel = svd(cover_green_dwt_subbands[0])
     U_cover_blue_channel, S_cover_blue_channel, V_cover_blue_channel = svd(cover_blue_dwt_subbands[0])
 
     # DWT on watermark image
-    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb_image(watermark_img)
+    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb(watermark_img)
 
     # SVD on watermark image
     U_watermark_red, S_watermark_red, V_watermark_red = svd(watermark_red_dwt_subbands[0])
@@ -59,7 +59,7 @@ def DWT_SVD_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     cover_img = read_file(coverImagePath, "RGB")
     watermark_img = read_file(watermarkImagePath, "RGB")
 
-    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb_image(cover_img)
+    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb(cover_img)
 
     U_cover_red_channel, S_cover_red_channel, V_cover_red_channel = svd(cover_red_dwt_subbands[0])
     U_cover_green_channel, S_cover_green_channel, V_cover_green_channel = svd(cover_green_dwt_subbands[0])
@@ -67,7 +67,7 @@ def DWT_SVD_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
 
     # Watermark Image
 
-    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb_image(watermark_img)
+    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb(watermark_img)
 
     U_watermark_red, S_watermark_red, V_watermark_red = svd(watermark_red_dwt_subbands[0])
     U_watermark_green, S_watermark_green, V_watermark_green = svd(
@@ -76,7 +76,7 @@ def DWT_SVD_RGB_LL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
         watermark_blue_dwt_subbands[0])
 
     # dwt on watermarked image
-    watermarked_red_dwt_subbands, watermarked_green_dwt_subbands, watermarked_blue_dwt_subbands = dwt_rgb_image(
+    watermarked_red_dwt_subbands, watermarked_green_dwt_subbands, watermarked_blue_dwt_subbands = dwt_rgb(
         watermarked_img)
     # svd on watermarked LL subband image
     U_watermarked_red_channel, S_watermarked_red_channel, V_watermarked_red_channel = svd(
@@ -119,7 +119,7 @@ def DWT_SVD_RGB_HL_EMBED(coverImagePath, watermarkImagePath):
     watermark_img = read_file(watermarkImagePath, "RGB")
 
     # DWT on cover_img
-    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb_image(cover_img)
+    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb(cover_img)
 
     # SVD on cover_img
     U_cover_red_channel, S_cover_red_channel, V_cover_red_channel = svd(cover_red_dwt_subbands[2])
@@ -127,7 +127,7 @@ def DWT_SVD_RGB_HL_EMBED(coverImagePath, watermarkImagePath):
     U_cover_blue_channel, S_cover_blue_channel, V_cover_blue_channel = svd(cover_blue_dwt_subbands[2])
 
     # DWT on watermark
-    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb_image(watermark_img)
+    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb(watermark_img)
 
     # SVD on watermark
     U_watermark_red, S_watermark_red, V_watermark_red = svd(watermark_red_dwt_subbands[2])
@@ -169,7 +169,7 @@ def DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     watermark_img = read_file(watermarkImagePath, "RGB")
 
     # DWT on cover_img
-    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb_image(cover_img)
+    cover_red_dwt_subbands, cover_green_dwt_subbands, cover_blue_dwt_subbands = dwt_rgb(cover_img)
 
     # SVD on cover_img
     U_cover_red_channel, S_cover_red_channel, V_cover_red_channel = svd(cover_red_dwt_subbands[2])
@@ -177,7 +177,7 @@ def DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     U_cover_blue_channel, S_cover_blue_channel, V_cover_blue_channel = svd(cover_blue_dwt_subbands[2])
 
     # DWT on watermark
-    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb_image(watermark_img)
+    watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands = dwt_rgb(watermark_img)
 
     # SVD on watermark
     U_watermark_red, S_watermark_red, V_watermark_red = svd(watermark_red_dwt_subbands[2])
@@ -188,7 +188,7 @@ def DWT_SVD_RGB_HL_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
 
     # Extracting embeded watermark
 
-    watermarked_red_dwt_subbands, watermarked_green_dwt_subbands, watermarked_blue_dwt_subbands = dwt_rgb_image(
+    watermarked_red_dwt_subbands, watermarked_green_dwt_subbands, watermarked_blue_dwt_subbands = dwt_rgb(
         watermarked_img)
     # svd on watermarked LL subband image
     U_watermarked_red_channel, S_watermarked_red_channel, V_watermarked_red_channel = svd(
@@ -239,16 +239,21 @@ def reverse_svd(U_channel, S_channel, V_channel):
     return wimgr
 
 
-def dwt_rgb_image(coverImage):
-    # get color cover chanels BGR
-    cover_red1 = coverImage[:, :, 2]
-    cover_green1 = coverImage[:, :, 1]
-    cover_blue1 = coverImage[:, :, 0]
+def dwt_rgb(cover_img):
+    red_channel, green_channel, blue_channel,  = get_rgb_channels(cover_img)
     # dwt on cover image on particular color channels
-    cr_LL, (cr_LH, cr_HL, cr_HH) = pywt.dwt2(cover_red1, 'haar')
-    cg_LL, (cg_LH, cg_HL, cg_HH) = pywt.dwt2(cover_green1, 'haar')
-    cb_LL, (cb_LH, cb_HL, cb_HH) = pywt.dwt2(cover_blue1, 'haar')
+    cr_LL, (cr_LH, cr_HL, cr_HH) = pywt.dwt2(red_channel, 'haar')
+    cg_LL, (cg_LH, cg_HL, cg_HH) = pywt.dwt2(green_channel, 'haar')
+    cb_LL, (cb_LH, cb_HL, cb_HH) = pywt.dwt2(blue_channel, 'haar')
     return [cr_LL, cr_LH, cr_HL, cr_HH], [cg_LL, cg_LH, cg_HL, cg_HH], [cb_LL, cb_LH, cb_HL, cb_HH]
+
+
+def get_rgb_channels(cover_img):
+    # get color cover chanels BGR
+    red_channel = cover_img[:, :, 2]
+    green_channel = cover_img[:, :, 1]
+    blue_channel = cover_img[:, :, 0]
+    return red_channel, green_channel,blue_channel
 
 
 def reverse_dwt_rgb(watermark_red_dwt_subbands, watermark_green_dwt_subbands, watermark_blue_dwt_subbands):
