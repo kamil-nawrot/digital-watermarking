@@ -37,18 +37,11 @@ def SVD_RGB_EMBED(coverImagePath, watermarkImagePath):
     return out_path
 
 
-def get_rgb_channels(img_rgb):
-    red_channel = img_rgb[:, :, 2]
-    green_channel = img_rgb[:, :, 1]
-    blue_channel = img_rgb[:, :, 0]
-    return red_channel, green_channel, blue_channel
-
-
 def SVD_RGB_EXTRACT(coverImagePath, watermarkImagePath, watermarked_img):
     cover_img = read_file(coverImagePath, "RGB")
     watermark_img = read_file(watermarkImagePath, "RGB")
 
-    cover_blue, cover_green, cover_red = get_rgb_channels(cover_img)
+    cover_red, cover_green, cover_blue = get_rgb_channels(cover_img)
 
     U_cover_red, S_cover_red, V_cover_red = svd_rgb(cover_red)
     U_cover_green, S_cover_green, V_cover_green = svd_rgb(cover_green)
@@ -109,8 +102,15 @@ def extract_watermark_svd(S_cover, S_watermarked):
 
 
 def combine_rgb_channels_to_bgr_img(red, green, blue):
-    bgr_img = np.dstack((blue, green, red))  # BGR format
+    bgr_img = np.dstack((red, green, blue))  # BGR format
     return bgr_img
+
+
+def get_rgb_channels(img_rgb):
+    red_channel = img_rgb[:, :, 2]
+    green_channel = img_rgb[:, :, 1]
+    blue_channel = img_rgb[:, :, 0]
+    return red_channel, green_channel, blue_channel
 
 
 def read_file(path, color):  # color == GRAY or RGB
