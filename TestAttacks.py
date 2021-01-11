@@ -203,9 +203,87 @@ def test_DWT_SVD_RGB_HL():
     print_latex_format(psnrs)
 
 
-# ________________ DWT-DCT
+# ________________ not attacked
+# ______________________________________________________
+def test_GRAY():
+    print("test GRAY")
+    psnrs = []
+    # dwt LL
+    im_wm1 = DWT_GRAY.DWT_GRAY_LL_EMBED(im_path, wm_path)
+    gray_wm = cv2.cvtColor(cv2.imread(im_wm1), cv2.COLOR_BGR2GRAY)
+    ext1 = DWT_GRAY.DWT_GRAY_LL_EXTRACT(im_path, wm_path, gray_wm)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt HL
+    im_wm1 = DWT_GRAY.DWT_GRAY_HL_EMBED(im_path, wm_path)
+    gray_wm = cv2.cvtColor(cv2.imread(im_wm1), cv2.COLOR_BGR2GRAY)
+    ext1 = DWT_GRAY.DWT_GRAY_HL_EXTRACT(im_path, wm_path, gray_wm)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # svd
+    im_wm1 = SVD_GRAY.SVD_GRAY_EMBED(im_path, wm_path)
+    gray_wm = cv2.cvtColor(cv2.imread(im_wm1), cv2.COLOR_BGR2GRAY)
+    ext1 = SVD_GRAY.SVD_GRAY_EXTRACT(im_path, wm_path, gray_wm)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-svd LL
+    im_wm1 = DWT_SVD_GRAY.DWT_SVD_GRAY_LL_EMBED(im_path, wm_path)
+    gray_wm = cv2.cvtColor(cv2.imread(im_wm1), cv2.COLOR_BGR2GRAY)
+    ext1 = DWT_SVD_GRAY.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, gray_wm)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-svd HL
+    im_wm1 = DWT_SVD_GRAY.DWT_SVD_GRAY_HL_EMBED(im_path, wm_path)
+    gray_wm = cv2.cvtColor(cv2.imread(im_wm1), cv2.COLOR_BGR2GRAY)
+    ext1 = DWT_SVD_GRAY.DWT_SVD_GRAY_HL_EXTRACT(im_path, wm_path, gray_wm)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-dct LL
+    # dwt-dct HL
+    print_latex_format(psnrs)
 
-base_psnr_for_attacked()
+
+def test_RGB():
+    print("test RGB")
+    psnrs = []
+    # dwt LL
+    im_wm1 = DWT_RGB.DWT_RGB_LL_EMBED(im_path, wm_path)
+    im_wm1 = cv2.imread(im_wm1, 8)
+    ext1 = DWT_RGB.DWT_RGB_LL_EXTRACT(im_path, wm_path, im_wm1)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt HL
+    im_wm1 = DWT_RGB.DWT_RGB_HL_EMBED(im_path, wm_path)
+    im_wm1 = cv2.imread(im_wm1, 8)
+    ext1 = DWT_RGB.DWT_RGB_HL_EXTRACT(im_path, wm_path, im_wm1)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # svd
+    im_wm1 = SVD_RGB.SVD_RGB_EMBED(im_path, wm_path)
+    im_wm1 = cv2.imread(im_wm1, 8)
+    ext1 = SVD_RGB.SVD_RGB_EXTRACT(im_path, wm_path, im_wm1)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-svd LL
+    im_wm1 = DWT_SVD_RGB.DWT_SVD_RGB_LL_EMBED(im_path, wm_path)
+    im_wm1 = cv2.imread(im_wm1, 8)
+    ext1 = DWT_SVD_RGB.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm1)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-svd HL
+    im_wm1 = DWT_SVD_RGB.DWT_SVD_RGB_HL_EMBED(im_path, wm_path)
+    im_wm1 = cv2.imread(im_wm1, 8)
+    ext1 = DWT_SVD_RGB.DWT_SVD_RGB_HL_EXTRACT(im_path, wm_path, im_wm1)
+    psnr1 = Attacks.check_psnr(wm, ext1)
+    psnrs.append(convert_psnr_to_latex(psnr1))
+    # dwt-dct LL
+    # dwt-dct HL
+    print(print_latex_format(psnrs))
+
+
+# ________________ testing playground
+
+# base_psnr_for_attacked()
 
 # ______ DWT
 # test_DWT_GRAY_LL()
@@ -214,11 +292,15 @@ base_psnr_for_attacked()
 # test_DWT_RGB_HL()
 
 # ______ SVD
-test_SVD_GRAY()
-test_SVD_RGB()
+# test_SVD_GRAY()
+# test_SVD_RGB()
 
 # ______ DWT-SVD
 # test_DWT_SVD_GRAY_LL()
 # test_DWT_SVD_GRAY_HL()
 # test_DWT_SVD_RGB_LL()
 # test_DWT_SVD_RGB_HL()
+
+
+test_GRAY()
+test_RGB()
