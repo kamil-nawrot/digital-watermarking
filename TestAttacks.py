@@ -173,13 +173,13 @@ def test_DWT_SVD_RGB_HL():
 base_psnr_for_attacked()
 
 # ______ DWT
-test_DWT_GRAY_LL()
-test_DWT_GRAY_HL()
+# test_DWT_GRAY_LL()
+# test_DWT_GRAY_HL()
 # test_DWT_RGB_LL()
 # test_DWT_RGB_HL()
 
 # ______ DWT-SVD
-test_DWT_SVD_GRAY_LL()
-test_DWT_SVD_GRAY_HL()
+# test_DWT_SVD_GRAY_LL()
+# test_DWT_SVD_GRAY_HL()
 # test_DWT_SVD_RGB_LL()
 # test_DWT_SVD_RGB_HL()
