@@ -48,6 +48,8 @@ def test_DWT_GRAY_LL():
 
     psnrs = []
     for atck_im in attacked_images:
+        if len(atck_im.shape) > 2:
+            atck_im = cv2.cvtColor(atck_im, cv2.COLOR_BGR2GRAY)
         wm_ext = DWT_GRAY.DWT_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(convert_psnr_to_latex(psnr))
@@ -63,6 +65,8 @@ def test_DWT_GRAY_HL():
 
     psnrs = []
     for atck_im in attacked_images:
+        if len(atck_im.shape) > 2:
+            atck_im = cv2.cvtColor(atck_im, cv2.COLOR_BGR2GRAY)
         wm_ext = DWT_GRAY.DWT_GRAY_HL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(convert_psnr_to_latex(psnr))
@@ -109,6 +113,8 @@ def test_DWT_SVD_GRAY_LL():
 
     psnrs = []
     for atck_im in attacked_images:
+        if len(atck_im.shape) > 2:
+            atck_im = cv2.cvtColor(atck_im, cv2.COLOR_BGR2GRAY)
         wm_ext = DWT_SVD_GRAY.DWT_SVD_GRAY_LL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(convert_psnr_to_latex(psnr))
@@ -124,6 +130,8 @@ def test_DWT_SVD_GRAY_HL():
 
     psnrs = []
     for atck_im in attacked_images:
+        if len(atck_im.shape) > 2:
+            atck_im = cv2.cvtColor(atck_im, cv2.COLOR_BGR2GRAY)
         wm_ext = DWT_SVD_GRAY.DWT_SVD_GRAY_HL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(convert_psnr_to_latex(psnr))
@@ -138,8 +146,8 @@ def test_DWT_SVD_RGB_LL():
     attacked_images = Attacks.perform_all_attacks_on_watermarked_image(image_with_watermark)
 
     psnrs = []
-    for im_wm_atk in attacked_images:
-        wm_ext = DWT_SVD_RGB.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, im_wm_atk)
+    for atck_im in attacked_images:
+        wm_ext = DWT_SVD_RGB.DWT_SVD_RGB_LL_EXTRACT(im_path, wm_path, atck_im)
         psnr = Attacks.check_psnr(wm, wm_ext)
         psnrs.append(convert_psnr_to_latex(psnr))
     print_latex_format(psnrs)
@@ -165,13 +173,13 @@ def test_DWT_SVD_RGB_HL():
 base_psnr_for_attacked()
 
 # ______ DWT
-# test_DWT_GRAY_LL()
-# test_DWT_GRAY_HL()
-test_DWT_RGB_LL()
-test_DWT_RGB_HL()
+test_DWT_GRAY_LL()
+test_DWT_GRAY_HL()
+# test_DWT_RGB_LL()
+# test_DWT_RGB_HL()
 
 # ______ DWT-SVD
-# test_DWT_SVD_GRAY_LL()
-# test_DWT_SVD_GRAY_HL()
-test_DWT_SVD_RGB_LL()
-test_DWT_SVD_RGB_HL()
+test_DWT_SVD_GRAY_LL()
+test_DWT_SVD_GRAY_HL()
+# test_DWT_SVD_RGB_LL()
+# test_DWT_SVD_RGB_HL()
